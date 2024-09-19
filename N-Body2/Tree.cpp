@@ -39,10 +39,7 @@ double OctTree::m_epsilon = 1e-3;
 
 OctTree::OctTree(Box boundingBox, std::shared_ptr<Node> body)://, std::weak_ptr<OctTree> parent) :
 	m_boundingBox(boundingBox),
-	//m_parent(parent),
 	m_body(body)
-	//m_theta(m_parent.lock()->getTheta()),
-	//m_epsilon(m_parent.lock()->getEpsilon())
 {
 }
 

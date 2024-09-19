@@ -118,8 +118,8 @@ public:
 
 	// Methods
 public:
-	OctTree(Box boundingBox, std::shared_ptr<Node> body);// , std::weak_ptr<OctTree> parent);
-	OctTree(Box boundingBox);// , std::weak_ptr<OctTree> parent);
+	OctTree(Box boundingBox);
+	OctTree(Box boundingBox, std::shared_ptr<Node> body);
 	OctTree(Box boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
@@ -148,7 +148,6 @@ public:
 	void subdivide();
 	void insertBody(std::shared_ptr<Node> body);
 	void updateCenterOfMass(std::shared_ptr<Node> body);
-	//void insertBodyIter(std::unique_ptr<Node> body);
 
 
 	// returns the parent container for a point assuming an unbounded box
