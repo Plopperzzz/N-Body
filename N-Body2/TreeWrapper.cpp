@@ -177,6 +177,7 @@ void TreeWrapper::update(const double& dt)
 		// iterating through the list a second time
 		max_test = glm::length(new_pos);
 		if (max_test > max) {
+			std::cout << "max_test: " << max_test << std::endl;
 			max = max_test;
 		}
 
@@ -192,8 +193,7 @@ void TreeWrapper::update(const double& dt)
 
 	// Create new tree so we dont move bodies before all forces are calcualted
 	Box newBoundingBox = Box(m_tree->m_boundingBox.center, 2 * max, 2 * max, 2 * max);
-	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(newBoundingBox, m_tree->m_theta, m_tree->m_epsilon);
-	std::cout << "BOXLEN: " << newTree->getLength() << std::endl;
+	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(newBoundingBox);
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
 	//std::shared_ptr<TreeWrapper> newTreeWrapper = std::make_shared<TreeWrapper>(newTree);
