@@ -33,16 +33,39 @@ void TreeWrapper::insertBody(std::shared_ptr<Node> body)
 }
 
 
-void calculateForce(Node& body, Node& other)
+void TreeWrapper::calculateForce(std::shared_ptr<Node> body, std::shared_ptr<Node> other)
 {
+	glm::dvec3 distance = body->position - other->position;
 
+	double norm = distance.length();
+
+	if (norm > m_tree->getEpsilon())
+	{
+		body->force += -G * body->mass * other->mass * distance / (norm * norm * norm);
+	}
+	else
+	{
+		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body->name << std::endl;
+	}
 }
-void calculateForce(Node& body, const glm::dvec3 position, const double& mass)
+
+void TreeWrapper::calculateForce(std::shared_ptr<Node> body, const glm::dvec3 position, const double& mass)
 {
+	glm::dvec3 distance = body->position - position;
 
+	double norm = distance.length();
+
+	if (norm > m_tree->getEpsilon())
+	{
+		body->force += -G * body->mass * mass * distance / (norm * norm * norm);
+	}
+	else
+	{
+		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body->name << std::endl;
+	}
 }
 
-void updateForce(Node& body, OctTree& tree)
+void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTree> tree)
 {
 
 }
