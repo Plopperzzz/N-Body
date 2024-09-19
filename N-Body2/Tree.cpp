@@ -51,15 +51,10 @@ OctTree::OctTree(Box boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0, 0, 0))
-	//m_parent(parent),
-	//m_theta(m_parent.lock()->getTheta()),
-	//m_epsilon(m_parent.lock()->getEpsilon())
 {
 }
 OctTree::OctTree(Box boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
-	//m_theta(theta),
-	//m_epsilon(epsilon),
 	m_centerOfMass(glm::dvec3(0)),
 	m_totalMass(0),
 	m_totalDescendants(0)
@@ -132,7 +127,6 @@ void OctTree::subdivide()
 				halfLength,
 				halfLength,
 				halfLength));
-			//shared_from_this());
 		++i;
 	}
 }

@@ -91,7 +91,6 @@ private:
 	Box m_boundingBox;
 
 	std::array<std::shared_ptr<OctTree>, PARTITIONS> m_children;
-	//std::weak_ptr<OctTree> m_parent;
 
 	glm::dvec3 m_centerOfMass;
 

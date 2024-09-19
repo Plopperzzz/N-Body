@@ -14,7 +14,6 @@ private:
 
 public:
 	TreeWrapper(std::shared_ptr<OctTree> root);
-	//~TreeWrapper();
 
 	// Getters
 	int getTotalBodies();
