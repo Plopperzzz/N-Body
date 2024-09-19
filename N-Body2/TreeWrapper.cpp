@@ -95,9 +95,55 @@ void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTre
 
 }
 
-void update(const double& dt)
+void TreeWrapper::update(const double& dt)
 {
+	// Create new tree so we dont move bodies before all forces are calcualted
+	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(m_tree->m_boundingBox, m_tree->m_theta, m_tree->m_epsilon);
 
+	// Create new wrapper to utilize its insertion that will expand the member tree if needed
+	std::shared_ptr<TreeWrapper> newTreeWrapper = std::make_shared<TreeWrapper>(newTree);
+	auto total_time = std::chrono::duration<double>::zero();
+
+
+	for (std::shared_ptr<Node> body : nodeList) {
+		if (body == nullptr)
+		{
+			std::cout << "found null body in update loop\n";
+		}
+		DEBUG_LOG("UPDATING:\n\t\t%s", body->name.c_str());
+
+		glm::dvec3 acc = body->force / body->mass;
+		glm::dvec3 new_pos = body->position + body->velocity * dt + acc * (dt * dt * 0.5);
+
+		// reset the force
+		body->force = glm::dvec3(0);
+
+		DEBUG_LOG("Pre update force:\n\t\t< %0.2f, %0.2f, %0.2f>\n", body->force.x, body->force.y, body->force.z);
+
+		updateForce(body, m_tree);
+		//total_time += Utils::measureInvokeCall(&TreeWrapper::updateForce, this, body, m_tree);
+
+
+		DEBUG_LOG("Post update force:\n\t\t< %0.2f, %0.2f, %0.2f>\n", body->force.x, body->force.y, body->force.z);
+
+		glm::dvec3 new_force = body->force;
+		glm::dvec3 new_accel = new_force / body->mass;
+		glm::dvec3 new_vel = body->velocity + (acc + new_accel) * (dt * 0.5);
+
+		(*body).position = new_pos;
+		(*body).velocity = new_vel;
+
+		std::shared_ptr<Node> updatedBody = std::make_shared<Node>(
+			body->getId(), body->name,  new_pos, new_vel, body->mass, body->radius);
+
+		newTreeWrapper->insertBody(updatedBody);
+	}
+	//std::cout << "Update -- Average update time for - " << nodeList.size() << " - bodies: " << std::setprecision(15) << total_time.count() / nodeList.size() << std::endl;
+
+
+	m_tree = newTree;
+
+	return;
 }
 
 using json = nlohmann::json;
