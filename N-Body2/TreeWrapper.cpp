@@ -1,5 +1,6 @@
 #include "TreeWrapper.h"
 #include <nlohmann/json.hpp>
+#include <Windows.h>
 
 TreeWrapper::TreeWrapper(std::shared_ptr<OctTree> root) :
 	nodeList(),
@@ -41,7 +42,11 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, std::shared_ptr<Nod
 {
 	glm::dvec3 distance = body->position - other->position;
 
-	double norm = distance.length();
+	double norm = glm::length(distance);
+	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
+
+	DEBUG_LOG("%s--%s:\n\t\tPre-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body->name.c_str(),
+		body->force.x, body->force.y, body->force.z);
 
 	if (norm > m_tree->m_epsilon)
 	{
@@ -53,6 +58,10 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, std::shared_ptr<Nod
 		// to prevent this
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body->name << std::endl;
 	}
+	DEBUG_LOG("%s: Other position: <%.2f, %.2f, %.2f>\n", __func__, other->position.x, other->position.y, other->position.z);
+	DEBUG_LOG("%s (PM) : Other mass: %.2f\n", __func__, other->mass);
+	DEBUG_LOG("%s--%s:\n\t\tPost-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body->name.c_str(),
+		body->force.x, body->force.y, body->force.z);
 }
 
 // Calculates the forces between a body and a point mass, and updates `body`s force
@@ -61,7 +70,8 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, const glm::dvec3 po
 {
 	glm::dvec3 distance = body->position - position;
 
-	double norm = distance.length();
+	double norm = glm::length(distance);
+	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
 
 	if (norm > m_tree->m_epsilon)
 	{
@@ -70,27 +80,47 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, const glm::dvec3 po
 	else
 	{
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body->name << std::endl;
-	}
+	}		
+	DEBUG_LOG("%s: Other position: <%.2f, %.2f, %.2f>\n", __func__, position.x, position.y, position.z);
+	DEBUG_LOG("%s (PM) : Other mass: %.2f\n", __func__, mass);
+	DEBUG_LOG("%s--%s:\n\t\tPost-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body->name.c_str(),
+		body->force.x, body->force.y, body->force.z);
 }
 
 void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTree> tree)
 {
 	bool leaf =tree->isLeaf();
-	bool threashold = (tree->getLength() / (body->position - tree->m_centerOfMass).length()) < tree->m_theta;
+	bool threshold = (tree->getLength() / (body->position - tree->m_centerOfMass).length()) < tree->m_theta;
+
+	// Debug: Print out the key variables to check their values
+	DEBUG_LOG("%s: Checking threshold\n", __func__);
+	DEBUG_LOG("\tTree length: %.2f\n", tree->getLength());
+	DEBUG_LOG("\tBody position: <%.2f, %.2f, %.2f>\n", body->position.x, body->position.y, body->position.z);
+	DEBUG_LOG("\tCenter of mass: <%.2f, %.2f, %.2f>\n", tree->m_centerOfMass.x, tree->m_centerOfMass.y, tree->m_centerOfMass.z);
+	DEBUG_LOG("\tTheta: %.2f\n", tree->m_theta);
+	DEBUG_LOG("\tThreshold: %d\n", threshold);
 
 	// Check if it's a leaf, empty region, or if it is the body we are already updating
 	if (leaf && (tree->m_body == nullptr || tree->m_body->getId() == body->getId()))
 	{
+		DEBUG_LOG("%s: Leaf, no valid body or self-body, skipping force update.\n", __func__);
+
 		return;
 	}
 
 	// Check if it is a branch
 	else if (!leaf) {
+		DEBUG_LOG("%s: Branch detected.\n", __func__);
 
-		if (threashold && tree->m_totalDescendants) {
+
+		if (threshold && tree->m_totalDescendants) {
+
+			DEBUG_LOG("*********************************************************************************\n");
+
 			calculateForce(body, tree->m_centerOfMass, tree->m_totalMass);
 		}
 		else {
+
 			for (int i = 0; i < PARTITIONS; ++i) {
 				updateForce(body, (*tree)[i]);
 			}
@@ -99,7 +129,9 @@ void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTre
 
 	// not a branch, leaf, or invalid node (nullptr or `body`)
 	else {
-		calculateForce(body, tree->m_body->position, tree->m_body->mass);
+		DEBUG_LOG("%s: Leaf or invalid node, calculating force directly.\n", __func__);
+
+		calculateForce(body, tree->m_body);
 	}
 
 	return;
@@ -108,22 +140,15 @@ void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTre
 
 void TreeWrapper::update(const double& dt)
 {
-	// Create new tree so we dont move bodies before all forces are calcualted
-	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(m_tree->m_boundingBox, m_tree->m_theta, m_tree->m_epsilon);
-
-	// Create new wrapper to utilize its insertion that will expand the member tree if needed
-	std::shared_ptr<TreeWrapper> newTreeWrapper = std::make_shared<TreeWrapper>(newTree);
 	auto total_time = std::chrono::duration<double>::zero();
-
+	double max = m_tree->m_boundingBox.getHalfLength();
+	double max_test;
 
 	for (std::shared_ptr<Node> body : nodeList) {
-
 		// This should never happen, but hey.
-		if (body == nullptr)
-		{
+		if (body == nullptr) {
 			std::cout << "found null body in update loop\n";
 		}
-		DEBUG_LOG("UPDATING:\n\t\t%s", body->name.c_str());
 
 		/** Velocity verlet integration **/
 
@@ -131,44 +156,64 @@ void TreeWrapper::update(const double& dt)
 		glm::dvec3 acc = body->force / body->mass;
 		glm::dvec3 new_pos = body->position + body->velocity * dt + acc * (dt * dt * 0.5);
 
-		// reset the force
+		// Reset the force
 		body->force = glm::dvec3(0);
 
-		DEBUG_LOG("Pre update force:\n\t\t< %0.2f, %0.2f, %0.2f>\n", body->force.x, body->force.y, body->force.z);
 
 		updateForce(body, m_tree);
-		//total_time += Utils::measureInvokeCall(&TreeWrapper::updateForce, this, body, m_tree);
-
-
-		DEBUG_LOG("Post update force:\n\t\t< %0.2f, %0.2f, %0.2f>\n", body->force.x, body->force.y, body->force.z);
 
 		// Getting ready to create a new body to insert into newTree
 		glm::dvec3 new_force = body->force;
 		glm::dvec3 new_accel = new_force / body->mass;
 		glm::dvec3 new_vel = body->velocity + (acc + new_accel) * (dt * 0.5);
 
-		// update the node in nodeList for future use
-		//(*body).position = new_pos;
-		//(*body).velocity = new_vel;
+		(*body).position = new_pos;
+		(*body).velocity = new_vel;
 
+		// Keep track of the furthest body from the center of the tree to determine if it needs to grow
+		// There may be a better, less expensive way of doing this, but hopefully iterating through nodelist again
+
+		// and rebuilding at most once per update outweighs potentially rebuilding multiple times per update and not
+		// iterating through the list a second time
+		max_test = glm::length(new_pos);
+		if (max_test > max) {
+			max = max_test;
+		}
+
+
+		// No need to create this new body if we are simply updating old bodfy and inserting it into a new tree
 		// Create that new body 
-		std::shared_ptr<Node> updatedBody = std::make_shared<Node>(
-			body->getId(), body->name,  new_pos, new_vel, body->mass, body->radius);
+	//	std::shared_ptr<Node> updatedBody = std::make_shared<Node>(
+	//		body->getId(), body->name, new_pos, new_vel, body->mass, body->radius);
 
-		newTreeWrapper->insertBody(updatedBody);
+		//newTreeWrapper->insertBody(updatedBody);
+		//newTree->insertBody(updatedBody);
 	}
-	//std::cout << "Update -- Average update time for - " << nodeList.size() << " - bodies: " << std::setprecision(15) << total_time.count() / nodeList.size() << std::endl;
 
+	// Create new tree so we dont move bodies before all forces are calcualted
+	Box newBoundingBox = Box(m_tree->m_boundingBox.center, 2 * max, 2 * max, 2 * max);
+	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(newBoundingBox, m_tree->m_theta, m_tree->m_epsilon);
+	std::cout << "BOXLEN: " << newTree->getLength() << std::endl;
+
+	// Create new wrapper to utilize its insertion that will expand the member tree if needed
+	//std::shared_ptr<TreeWrapper> newTreeWrapper = std::make_shared<TreeWrapper>(newTree);
+
+	for (std::shared_ptr<Node> body : nodeList) {
+		std::shared_ptr<Node> bodyCopy = std::make_shared<Node>(*body);
+		newTree->insertBody(bodyCopy);
+	}
 
 	// Replace the old tree with the new tree
+	//m_tree = std::move(newTree);
 	m_tree = newTree;
 
-	// replace the old nodeList too 
-	// Should find a better way to do this
-	nodeList = newTreeWrapper->nodeList;
+	// Replace the old nodeList too
+	//nodeList = newTreeWrapper->nodeList;
+	//nodeList = std::move(newTreeWrapper->nodeList);
 
 	return;
 }
+
 
 using json = nlohmann::json;
 

@@ -9,7 +9,7 @@ void Utils::signalHandler(int signum) {
 void Utils::outputPositions(std::vector<std::shared_ptr<Node>> bodies, double time, std::ofstream& file) {
 	file << time;
 	for (auto& node : bodies) {
-		file << "," << node->position.x << "," << node->position.y;
+		file << "," << node->position.x << "," << node->position.y << "," << node->position.z;
 	}
 	file << "\n";
 }
@@ -150,7 +150,7 @@ void Utils::gpScript(std::string script_name, std::string gif_name, std::string 
 		return;
 	}
 
-	auto setup =			"# Set the terminal to TIFF\nset terminal gif size 1024, 1024 enhanced font 'Arial,12'\n\n";
+	auto setup =			"# Set the terminal to GIF\nset terminal gif size 1024, 1024 enhanced font 'Arial,12'\n\n";
 	auto output =			"set output '" + gif_name + ".gif'\n\n";
 	auto delimiter =		"# Set the delimiter to comma\nset datafile separator ','\n\n";
 	auto axis =				"# Set axis\nset xrange[" + std::to_string(-1 * size) + ":" + std::to_string(size) + "]\nset yrange[" + std::to_string(-1 * size) + ":" + std::to_string(size) + "]\n";
@@ -163,11 +163,54 @@ void Utils::gpScript(std::string script_name, std::string gif_name, std::string 
 	int i = 0;
 	for (auto& body_name : body_names) {
 		plotData += "'" + data_name + "' using " + std::to_string(i + 2) + ":" + std::to_string(i + 3) + "  with lines lw 2 notitle, \\\n";
-		i += 2;
+		i += 3;
 	}
 
 	auto setOutput = "# Finalize the output\nset output\n";
 
+	gnuplot << setup << output << delimiter << axis << ratio << title << loadData << plotData << setOutput;
+	return;
+}
+
+
+// expects a csv with data formatted as:
+// timestep, body1_x, body1_y, ..., bodyN_x, bodyN_y
+void Utils::gpScript3d(std::string script_name, std::string gif_name, std::string data_name, double size, std::vector<std::string> body_names, std::string path) {
+	std::ofstream gnuplot(path + script_name);
+
+	if (!gnuplot.is_open()) {
+		std::cerr << "Error: Could not open file for writing: " << path + script_name << "\n";
+		std::cerr << "Current directory: " << std::filesystem::current_path() << std::endl;
+		return;
+	}
+
+	// Setup Gnuplot for GIF and 3D plot
+	auto setup = "# Set the terminal to GIF\nset terminal gif size 1024, 1024 enhanced font 'Arial,12'\n\n";
+	auto output = "set output '" + gif_name + ".gif'\n\n";
+	auto delimiter = "# Set the delimiter to comma\nset datafile separator ','\n\n";
+
+	// Set the axis ranges for 3D
+	auto axis = "# Set axis\nset xrange[" + std::to_string(-1 * size) + ":" + std::to_string(size) + "]\n"
+		"set yrange[" + std::to_string(-1 * size) + ":" + std::to_string(size) + "]\n"
+		"set zrange[" + std::to_string(-1 * size) + ":" + std::to_string(size) + "]\n";
+
+	auto ratio = "set size ratio -1\n\n";
+
+	auto title = "# Set titles and labels\nset title \"3D Orbits\"\n\n";
+
+	// Prepare to load and plot data
+	auto loadData = "# Load and plot data from file\nsplot ";
+	std::string plotData = "";
+	int i = 0;
+	for (auto& body_name : body_names) {
+		// Use the i+2, i+3, i+4 columns for x, y, z of each body
+		plotData += "'" + data_name + "' using " + std::to_string(i + 2) + ":" + std::to_string(i + 3) + ":" + std::to_string(i + 4) + "  with lines lw 2 notitle, \\\n";
+		i += 3; // Increment by 3 since we're using 3 columns per body (x, y, z)
+	}
+
+	auto setOutput = "# Finalize the output\nset output\n";
+
+	// Write everything to the Gnuplot script
 	gnuplot << setup << output << delimiter << axis << ratio << title << loadData << plotData << setOutput;
 	return;
 }

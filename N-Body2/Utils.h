@@ -46,6 +46,7 @@ public:
 	static void signalHandler(int signum);
 
 	static void gpScript(std::string script_name, std::string gif_name,std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
+	static void gpScript3d(std::string script_name, std::string gif_name,std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
 
 	// Variadic template to allow for multiple arguments like printf
 	template<typename... Args>
