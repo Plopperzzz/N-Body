@@ -144,6 +144,8 @@ void TreeWrapper::update(const double& dt)
 	double max = m_tree->m_boundingBox.getHalfLength();
 	double max_test;
 
+	bool expand = false;
+
 	for (std::shared_ptr<Node> body : nodeList) {
 		// This should never happen, but hey.
 		if (body == nullptr) {
@@ -158,7 +160,6 @@ void TreeWrapper::update(const double& dt)
 
 		// Reset the force
 		body->force = glm::dvec3(0);
-
 
 		updateForce(body, m_tree);
 
@@ -179,24 +180,20 @@ void TreeWrapper::update(const double& dt)
 		if (max_test > max) {
 			std::cout << "max_test: " << max_test << std::endl;
 			max = max_test;
+			expand = true;
 		}
+	}
 
-
-		// No need to create this new body if we are simply updating old bodfy and inserting it into a new tree
-		// Create that new body 
-	//	std::shared_ptr<Node> updatedBody = std::make_shared<Node>(
-	//		body->getId(), body->name, new_pos, new_vel, body->mass, body->radius);
-
-		//newTreeWrapper->insertBody(updatedBody);
-		//newTree->insertBody(updatedBody);
+	if (expand)
+	{
+		max *= 2;
 	}
 
 	// Create new tree so we dont move bodies before all forces are calcualted
-	Box newBoundingBox = Box(m_tree->m_boundingBox.center, 2 * max, 2 * max, 2 * max);
+	Box newBoundingBox = Box(m_tree->m_boundingBox.center, max, max, max);
 	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(newBoundingBox);
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
-	//std::shared_ptr<TreeWrapper> newTreeWrapper = std::make_shared<TreeWrapper>(newTree);
 
 	for (std::shared_ptr<Node> body : nodeList) {
 		std::shared_ptr<Node> bodyCopy = std::make_shared<Node>(*body);
@@ -206,10 +203,6 @@ void TreeWrapper::update(const double& dt)
 	// Replace the old tree with the new tree
 	//m_tree = std::move(newTree);
 	m_tree = newTree;
-
-	// Replace the old nodeList too
-	//nodeList = newTreeWrapper->nodeList;
-	//nodeList = std::move(newTreeWrapper->nodeList);
 
 	return;
 }

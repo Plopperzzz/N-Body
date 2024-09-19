@@ -118,8 +118,6 @@ int main(int argc, char** argv)
 	Tree.loadBodies(input_path);
 	rootLength = Tree.getTree().getLength();
 
-	std::cout << rootLength << std::endl;
-
 
 	/*************************************************************/
 	/************************ END SETUP **************************/
@@ -148,7 +146,7 @@ int main(int argc, char** argv)
 		}
 
 		std::cout << script_path << " written\n";
-		Utils::gpScript(script_path, gif_path, data_name, rootLength, node_names);
+		Utils::gpScript(script_path, gif_path, data_name, Tree.getTree().getLength(), node_names);
 		std::cout << "Calling " << script_path << "\n";
 		system(gnuCommand.c_str());
 		std::cout << "opening " << gif_path << "\n";
