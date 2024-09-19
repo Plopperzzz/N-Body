@@ -6,7 +6,7 @@ void Utils::signalHandler(int signum) {
 
 	exit(signum);
 }
-void Utils::outputPositions(std::vector<Node*> bodies, double time, std::ofstream& file) {
+void Utils::outputPositions(std::vector<std::shared_ptr<Node>> bodies, double time, std::ofstream& file) {
 	file << time;
 	for (auto& node : bodies) {
 		file << "," << node->position.x << "," << node->position.y;
