@@ -9,6 +9,7 @@ Node::Node(int id, std::string name, glm::dvec3 position, glm::dvec3 velocity, d
 	m_id(id),
 	position(position),
 	velocity(velocity),
+	force(glm::dvec3(0)),
 	name(name),
 	mass(mass),
 	radius(radius),
@@ -38,8 +39,11 @@ double OctTree::m_theta = 0.5;
 double OctTree::m_epsilon = 1e-3;
 
 OctTree::OctTree(Box boundingBox, std::shared_ptr<Node> body)://, std::weak_ptr<OctTree> parent) :
+	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
-	m_body(body)
+	m_body(body),
+	m_totalDescendants(0),
+	m_totalMass(0)
 {
 }
 
@@ -47,7 +51,7 @@ OctTree::OctTree(Box boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
-	m_centerOfMass(glm::dvec3(0, 0, 0))
+	m_centerOfMass(glm::dvec3(0))
 {
 }
 OctTree::OctTree(Box boundingBox, double& theta, double& epsilon) :

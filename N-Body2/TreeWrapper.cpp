@@ -39,7 +39,7 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, std::shared_ptr<Nod
 
 	double norm = distance.length();
 
-	if (norm > m_tree->getEpsilon())
+	if (norm > m_tree->m_epsilon)
 	{
 		body->force += -G * body->mass * other->mass * distance / (norm * norm * norm);
 	}
@@ -55,7 +55,7 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, const glm::dvec3 po
 
 	double norm = distance.length();
 
-	if (norm > m_tree->getEpsilon())
+	if (norm > m_tree->m_epsilon)
 	{
 		body->force += -G * body->mass * mass * distance / (norm * norm * norm);
 	}
@@ -67,8 +67,34 @@ void TreeWrapper::calculateForce(std::shared_ptr<Node> body, const glm::dvec3 po
 
 void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTree> tree)
 {
+	bool leaf =tree->isLeaf();
+	bool threashold = (tree->getLength() / (body->position - tree->m_centerOfMass).length()) < tree->m_theta;
+
+	if (leaf && (tree->m_body == nullptr || tree->m_body->getId() == body->getId()))
+	{
+		return;
+	}
+
+	else if (!leaf) {
+
+		if (threashold && tree->m_totalDescendants) {
+			calculateForce(body, tree->m_centerOfMass, tree->m_totalMass);
+		}
+		else {
+			for (int i = 0; i < PARTITIONS; ++i) {
+				updateForce(body, (*tree)[i]);
+			}
+		}
+	}
+
+	else {
+		calculateForce(body, tree->m_body->position, tree->m_body->mass);
+	}
+
+	return;
 
 }
+
 void update(const double& dt)
 {
 

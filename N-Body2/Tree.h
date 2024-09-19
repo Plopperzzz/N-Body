@@ -83,7 +83,7 @@ public:
 
 class OctTree : public std::enable_shared_from_this<OctTree>
 {
-	friend class QuadTreeWrapper;
+	friend class TreeWrapper;
 
 private:
 	std::shared_ptr<Node> m_body;
