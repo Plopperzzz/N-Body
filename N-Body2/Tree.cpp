@@ -12,8 +12,8 @@ Node::Node(int id, std::string name, glm::dvec3 position, glm::dvec3 velocity, d
 	force(glm::dvec3(0)),
 	name(name),
 	mass(mass),
-	radius(radius),
-	path(std::make_shared<std::vector<int>>())
+	radius(radius)
+	//path(std::make_shared<std::vector<int>>())
 {}
 
 int Node::getId() {
@@ -182,13 +182,13 @@ void OctTree::insertBody(std::shared_ptr<Node> body)
 
 		// it is a leaf, and empty, so we can insert the node here
 		m_body = body;
-		body->path->push_back(octant);
+		//body->path->push_back(octant);
 		return;
 
 	}
 
 
-	body->path->push_back(octant);
+	//body->path->push_back(octant);
 
 	if (m_body == nullptr) {
 

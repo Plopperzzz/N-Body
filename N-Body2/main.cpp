@@ -51,9 +51,12 @@ int main(int argc, char** argv)
 		;
 
 	system("CLS");
+	std::stringstream gif_title;
 	for (int i = 1; i < argc; ++i) {
-		std::cout << argv[i] << " ";
+		gif_title << argv[i] << "__";
 	}
+	//std::cout << gif_title.str() << std::endl;
+
 	std::cout << std::endl;
 
 	auto result = options.parse(argc, argv);
@@ -146,7 +149,7 @@ int main(int argc, char** argv)
 		}
 
 		std::cout << script_path << " written\n";
-		Utils::gpScript(script_path, gif_path, data_name, Tree.getTree().getLength(), node_names);
+		Utils::gpScript3d(script_path, gif_path, data_name, Tree.getTree().getLength()/3, node_names);
 		std::cout << "Calling " << script_path << "\n";
 		system(gnuCommand.c_str());
 		std::cout << "opening " << gif_path << "\n";

@@ -62,7 +62,7 @@ public:
 	glm::dvec3 position;
 	glm::dvec3 velocity;
 	glm::dvec3 force;
-	std::shared_ptr<std::vector<int>> path;
+	//std::shared_ptr<std::vector<int>> path;
 	double mass;
 	double radius;
 

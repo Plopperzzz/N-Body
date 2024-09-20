@@ -122,7 +122,8 @@ void TreeWrapper::updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTre
 		else {
 
 			for (int i = 0; i < PARTITIONS; ++i) {
-				updateForce(body, (*tree)[i]);
+				if((*tree)[i]->m_totalDescendants > 0)
+					updateForce(body, (*tree)[i]);
 			}
 		}
 	}
@@ -178,7 +179,7 @@ void TreeWrapper::update(const double& dt)
 		// iterating through the list a second time
 		max_test = glm::length(new_pos);
 		if (max_test > max) {
-			std::cout << "max_test: " << max_test << std::endl;
+			//std::cout << "max_test: " << max_test << std::endl;
 			max = max_test;
 			expand = true;
 		}
@@ -240,17 +241,7 @@ void TreeWrapper::loadBodies(std::string file_path) {
 			l_mass, l_radius);
 
 		insertBody(body);
-
-#ifdef _DEBUG
-		std::cout << body->name << " path: ";
-		for (int& q : *(body->path)) {
-			std::cout << q << " ";
-		}
-		std::cout << std::endl;
-#endif
-
 	}
-	// print node path for debug 
 
 	std::cout << "Finished loding bodies from " << file_path << std::endl;
 
