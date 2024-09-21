@@ -47,7 +47,7 @@ public:
 	void setWidth(double& width);
 	void setHeight(double& height);
 
-	bool virtual isPointContained(glm::dvec3 point);
+	bool virtual isPointContained(glm::dvec3& point);
 	bool virtual isInstersecting(Box box);
 	bool virtual isContained(Box box);
 

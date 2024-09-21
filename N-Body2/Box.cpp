@@ -64,7 +64,7 @@ void Box::setHeight(double& height)
 
 // Returns true is point is contained within the Box
 // Assumes no rotation of the box with respect to global
-bool Box::isPointContained(glm::dvec3 point) {
+bool Box::isPointContained(glm::dvec3& point) {
 	bool xContained = (point.x >= center.x - m_halfWidth) && (point.x <= center.x + m_halfWidth);
 	bool yContained = (point.y >= center.y - m_halfLength) && (point.y <= center.y + m_halfLength);
 	bool zContained = (point.z >= center.z - m_halfHeight) && (point.z <= center.z + m_halfHeight);

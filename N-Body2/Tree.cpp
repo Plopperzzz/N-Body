@@ -3,7 +3,9 @@
 
 
 // Node
-Node::Node() {}
+Node::Node():
+	m_id(-1)
+{}
 
 Node::Node(int id, std::string name, glm::dvec3 position, glm::dvec3 velocity, double const mass, double const radius) :
 	m_id(id),
@@ -38,7 +40,7 @@ const glm::dvec3 OctTree::basis[8] = {
 double OctTree::m_theta = 0.5;
 double OctTree::m_epsilon = 1e-3;
 
-OctTree::OctTree(Box boundingBox, std::shared_ptr<Node> body)://, std::weak_ptr<OctTree> parent) :
+OctTree::OctTree(Box boundingBox, Node& body)://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
@@ -132,17 +134,17 @@ void OctTree::subdivide()
 	}
 }
 
-void OctTree::updateCenterOfMass(std::shared_ptr<Node> body) {
-	double mass = body->mass;
-	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body->position) / (m_totalMass + mass);
+void OctTree::updateCenterOfMass(Node& body) {
+	double mass = body.mass;
+	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
 }
 
-bool OctTree::inBounds(glm::dvec3 position) {
+bool OctTree::inBounds(glm::dvec3& position) {
 	return m_boundingBox.isPointContained(position);
 }
 
-OctTree::Octant OctTree::findOctant(glm::dvec3 point) {
+OctTree::Octant OctTree::findOctant(glm::dvec3& point) {
 
 	glm::dvec3 center = m_boundingBox.center;
 	int index = 0;
@@ -165,9 +167,9 @@ OctTree::Octant OctTree::findOctant(glm::dvec3 point) {
 	}
 }
 
-void OctTree::insertBody(std::shared_ptr<Node> body)
+void OctTree::insertBody(Node& body)
 {
-	if (inBounds(body->position) == false)
+	if (inBounds(body.position) == false)
 	{
 		return;
 	}
@@ -176,9 +178,9 @@ void OctTree::insertBody(std::shared_ptr<Node> body)
 	++m_totalDescendants;
 	updateCenterOfMass(body);
 
-	octant = findOctant(body->position);
+	octant = findOctant(body.position);
 
-	if (m_body == nullptr && isLeaf()) {
+	if (m_body.getId() == -1 && isLeaf()) {
 
 		// it is a leaf, and empty, so we can insert the node here
 		m_body = body;
@@ -190,7 +192,7 @@ void OctTree::insertBody(std::shared_ptr<Node> body)
 
 	//body->path->push_back(octant);
 
-	if (m_body == nullptr) {
+	if (m_body.getId() == -1) {
 
 		// it is not a leaf, so we need to recurse.
 		m_children[octant]->insertBody(body);
@@ -202,10 +204,10 @@ void OctTree::insertBody(std::shared_ptr<Node> body)
 		// subdivide and we need to re-insert the body that previously
 		// populated the current quad
 
-		std::shared_ptr<Node> currentInhabitant = m_body;
-		m_body = nullptr;
+		Node currentInhabitant = m_body;
+		m_body = Node();
 
-		currentInhabitantNewQuadrant = findOctant(currentInhabitant->position);
+		currentInhabitantNewQuadrant = findOctant(currentInhabitant.position);
 
 		subdivide();
 

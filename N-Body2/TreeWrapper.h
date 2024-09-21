@@ -5,7 +5,7 @@
 class TreeWrapper
 {
 public:
-	std::vector<std::shared_ptr<Node>> nodeList;
+	std::vector<Node> nodeList;
 
 private:
 	std::shared_ptr<OctTree> m_tree;
@@ -20,14 +20,14 @@ public:
 
 	OctTree& getTree();
 
-	std::shared_ptr<Node> operator[](std::size_t index);
+	Node& operator[](std::size_t index);
 
-	void insertBody(std::shared_ptr<Node> body);
+	void insertBody(Node& body);
 
-	void calculateForce(std::shared_ptr<Node> body, std::shared_ptr<Node> other);
-	void calculateForce(std::shared_ptr<Node> body, const glm::dvec3 position, const double& mass);
+	void calculateForce(Node& body, const Node& other);
+	void calculateForce(Node& body, const glm::dvec3 position, const double& mass);
 
-	void updateForce(std::shared_ptr<Node> body, std::shared_ptr<OctTree> tree);
+	void updateForce(Node& body, std::shared_ptr<OctTree> tree);
 	void update(const double& dt);
 
 	void loadBodies(std::string filePath);

@@ -86,7 +86,7 @@ class OctTree : public std::enable_shared_from_this<OctTree>
 	friend class TreeWrapper;
 
 private:
-	std::shared_ptr<Node> m_body;
+	Node m_body;
 
 	Box m_boundingBox;
 
@@ -119,7 +119,7 @@ public:
 	// Methods
 public:
 	OctTree(Box boundingBox);
-	OctTree(Box boundingBox, std::shared_ptr<Node> body);
+	OctTree(Box boundingBox, Node& body);
 	OctTree(Box boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
@@ -142,12 +142,12 @@ public:
 
 	// bool
 	bool isLeaf();
-	bool inBounds(glm::dvec3 position);
+	bool inBounds(glm::dvec3& position);
 
 	// void
 	void subdivide();
-	void insertBody(std::shared_ptr<Node> body);
-	void updateCenterOfMass(std::shared_ptr<Node> body);
+	void insertBody(Node& body);
+	void updateCenterOfMass(Node& body);
 
 
 	// returns the parent container for a point assuming an unbounded box
@@ -156,6 +156,6 @@ public:
 	//
 	// Use: to find which portion of a smaller tree a point belongs to in order to 
 	// force the tree to grow to contain it.
-	Octant findOctant(glm::dvec3 point);
+	Octant findOctant(glm::dvec3& point);
 };
 

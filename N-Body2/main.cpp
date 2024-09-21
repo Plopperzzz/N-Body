@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 	if (result.count("plot")) {
 		std::vector<std::string> node_names;
 		for (auto& body : Tree.nodeList) {
-			node_names.push_back(body->name);
+			node_names.push_back(body.name);
 		}
 
 		std::cout << script_path << " written\n";
