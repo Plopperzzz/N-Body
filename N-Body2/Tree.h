@@ -6,7 +6,7 @@
 #include <array>
 
 #include "constants.h"
-#include "Box.h"
+#include "BoxBase.h"
 
 /*********************
 
@@ -88,7 +88,7 @@ class OctTree : public std::enable_shared_from_this<OctTree>
 private:
 	Node m_body;
 
-	Box m_boundingBox;
+	Box3D m_boundingBox;
 
 	std::array<std::shared_ptr<OctTree>, PARTITIONS> m_children;
 
@@ -118,9 +118,9 @@ public:
 
 	// Methods
 public:
-	OctTree(Box boundingBox);
-	OctTree(Box boundingBox, Node& body);
-	OctTree(Box boundingBox, double& theta, double& epsilon);
+	OctTree(Box3D boundingBox);
+	OctTree(Box3D boundingBox, Node& body);
+	OctTree(Box3D boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
 	std::shared_ptr<OctTree>& operator[](std::size_t childIndex);

@@ -40,7 +40,7 @@ const glm::dvec3 OctTree::basis[8] = {
 double OctTree::m_theta = 0.5;
 double OctTree::m_epsilon = 1e-3;
 
-OctTree::OctTree(Box boundingBox, Node& body)://, std::weak_ptr<OctTree> parent) :
+OctTree::OctTree(Box3D boundingBox, Node& body)://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
@@ -49,14 +49,14 @@ OctTree::OctTree(Box boundingBox, Node& body)://, std::weak_ptr<OctTree> parent)
 {
 }
 
-OctTree::OctTree(Box boundingBox)://, std::weak_ptr<OctTree> parent) :
+OctTree::OctTree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0))
 {
 }
-OctTree::OctTree(Box boundingBox, double& theta, double& epsilon) :
+OctTree::OctTree(Box3D boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0)),
 	m_totalMass(0),
@@ -125,7 +125,7 @@ void OctTree::subdivide()
 	for (auto& child : m_children)
 	{
 		child = std::make_shared<OctTree>(
-			Box(
+			Box3D(
 				thisCenter + halfLength * basis[i],
 				halfLength,
 				halfLength,
@@ -141,7 +141,7 @@ void OctTree::updateCenterOfMass(Node& body) {
 }
 
 bool OctTree::inBounds(glm::dvec3& position) {
-	return m_boundingBox.isPointContained(position);
+	return m_boundingBox.contains(position);
 }
 
 OctTree::Octant OctTree::findOctant(glm::dvec3& point) {
