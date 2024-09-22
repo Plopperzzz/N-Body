@@ -52,7 +52,7 @@ methods:
 	     	+--------------+--------------+
 
 */
-class QuadTreeWrapper;
+class TreeWrapper;
 
 class Tree
 {
