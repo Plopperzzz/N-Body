@@ -7,7 +7,13 @@
 // Node
 template <typename VecType>
 Node<VecType>::Node() :
-	m_id(-1), position(), velocity(), force(), mass(0.0), radius(0.0)
+	m_id(-1),
+	name(),
+	position(),
+	velocity(),
+	force(),
+	mass(0.0),
+	radius(0.0)
 {}
 
 template <typename VecType>
