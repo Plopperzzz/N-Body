@@ -1,30 +1,37 @@
+#ifndef TREEWRAPPER_TPP
+#define TREEWRAPPER_TPP
 #include "TreeWrapper.h"
 #include <nlohmann/json.hpp>
 #include <Windows.h>
 
-TreeWrapper::TreeWrapper(std::shared_ptr<Tree> root) :
+template <typename VecType>
+TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree> root) :
 	nodeList(),
 	m_totalBodies(0),
 	m_tree(root)
 {
 }
 
-Node3D& TreeWrapper::operator[](std::size_t index)
+template <typename VecType>
+Node3D& TreeWrapper<VecType>::operator[](std::size_t index)
 {
 	return nodeList[index];
 }
 
-int TreeWrapper::getTotalBodies()
+template <typename VecType>
+int TreeWrapper<VecType>::getTotalBodies()
 {
 	return m_totalBodies;
 }
 
-Tree& TreeWrapper::getTree()
+template <typename VecType>
+Tree& TreeWrapper<VecType>::getTree()
 {
 	return *m_tree;
 }
 
-void TreeWrapper::insertBody(Node3D& body)
+template <typename VecType>
+void TreeWrapper<VecType>::insertBody(Node3D& body)
 {
 	// TODO: grow to adapt to new nodes
 	// Use the Tree insertion function
@@ -38,7 +45,8 @@ void TreeWrapper::insertBody(Node3D& body)
 
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
-void TreeWrapper::calculateForce(Node3D& body, const Node3D& other)
+template <typename VecType>
+void TreeWrapper<VecType>::calculateForce(Node3D& body, const Node3D& other)
 {
 	glm::dvec3 distance = body.position - other.position;
 
@@ -66,7 +74,8 @@ void TreeWrapper::calculateForce(Node3D& body, const Node3D& other)
 
 // Calculates the forces between a body and a point mass, and updates `body`s force
 // Used in case we are calculating the force between a Node and a center of mass
-void TreeWrapper::calculateForce(Node3D& body, const glm::dvec3 position, const double& mass)
+template <typename VecType>
+void TreeWrapper<VecType>::calculateForce(Node3D& body, const glm::dvec3 position, const double& mass)
 {
 	glm::dvec3 distance = body.position - position;
 
@@ -87,7 +96,8 @@ void TreeWrapper::calculateForce(Node3D& body, const glm::dvec3 position, const 
 		body.force.x, body.force.y, body.force.z);
 }
 
-void TreeWrapper::updateForce(Node3D& body, std::shared_ptr<Tree> tree)
+template <typename VecType>
+void TreeWrapper<VecType>::updateForce(Node3D& body, std::shared_ptr<Tree> tree)
 {
 	bool leaf =tree->isLeaf();
 	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
@@ -142,7 +152,8 @@ void TreeWrapper::updateForce(Node3D& body, std::shared_ptr<Tree> tree)
 
 }
 
-void TreeWrapper::update(const double& dt)
+template <typename VecType>
+void TreeWrapper<VecType>::update(const double& dt)
 {
 	auto total_time = std::chrono::duration<double>::zero();
 	double max = m_tree->m_boundingBox.getHalfLength();
@@ -214,7 +225,8 @@ void TreeWrapper::update(const double& dt)
 
 using json = nlohmann::json;
 
-void TreeWrapper::loadBodies(std::string file_path) {
+template <typename VecType>
+void TreeWrapper<VecType>::loadBodies(std::string file_path) {
 	std::ifstream file(file_path);
 
 	if (!file.is_open()) {
@@ -261,5 +273,6 @@ void TreeWrapper::loadBodies(std::string file_path) {
 	return;
 }
 
+#endif
 
 

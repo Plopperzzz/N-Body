@@ -116,7 +116,7 @@ int main(int argc, char** argv)
 
 	Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
 	std::shared_ptr<Tree> root = std::make_shared<Tree>(bb, theta, epsilon);
-	TreeWrapper TestTree(root);
+	TreeWrapper3D TestTree(root);
 
 	TestTree.loadBodies(input_path);
 	rootLength = TestTree.getTree().getLength();
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 	for (int i = 0; i < num; ++i) {
 
 		previous_time = total_time;
-		total_time += Utils::measureInvokeCall(&TreeWrapper::update, TestTree, dt);
+		total_time += Utils::measureInvokeCall(&TreeWrapper3D::update, TestTree, dt);
 		if (plot)
 			Utils::outputPositions(TestTree.nodeList, i*dt, orbitFile);
 

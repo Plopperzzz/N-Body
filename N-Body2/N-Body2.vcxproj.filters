@@ -36,6 +36,9 @@
     <ClInclude Include="BoxBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tree.cpp">
@@ -50,12 +53,13 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TreeWrapper.cpp">
+    <ClCompile Include="TreeWrapper.tpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BoxBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Node.tpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Earth_Moon_Sun.json">

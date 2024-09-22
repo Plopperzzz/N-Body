@@ -1,7 +1,10 @@
+#ifndef TREEWRAPPER_H
+#define TREEWRAPPER_H
 #pragma once
 #include "Tree.h"
 #include "Utils.h"
 
+template <typename VecType>
 class TreeWrapper
 {
 public:
@@ -33,3 +36,7 @@ public:
 	void loadBodies(std::string filePath);
 };
 
+using TreeWrapper3D = TreeWrapper<glm::dvec3>;
+
+#include "TreeWrapper.tpp"
+#endif

@@ -52,10 +52,12 @@ methods:
 	     	+--------------+--------------+
 
 */
+template <typename VecType>
 class TreeWrapper;
 
 class Tree
 {
+template <typename VecType>
 	friend class TreeWrapper;
 
 private:
