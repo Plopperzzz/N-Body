@@ -37,29 +37,17 @@ private:
     double m_halfHeight;
 
 public:
-    // Constructor for 2D
-    template <typename T = VecType>
-    Box(const VecType& center_, const glm::dvec3& color_,
-        double halfLength, double halfWidth,
-        typename std::enable_if<std::is_same<T, glm::dvec2>::value, double>::type = 0)
-        : center(center_), color(color_),
-        m_halfLength(halfLength), m_halfWidth(halfWidth), m_halfHeight(0.0) {}
-
-    // Constructor for 3D
-    template <typename T = VecType>
-    Box(const VecType& center_, const glm::dvec3& color_,
-        double halfLength, double halfWidth, double halfHeight,
-        typename std::enable_if<std::is_same<T, glm::dvec3>::value, double>::type = 0)
-        : center(center_), color(color_),
-        m_halfLength(halfLength), m_halfWidth(halfWidth), m_halfHeight(halfHeight) {}
-
-    template <typename T = VecType>
-    Box(const VecType& center_,
-        double halfLength, double halfWidth, double halfHeight,
-        typename std::enable_if<std::is_same<T, glm::dvec3>::value, double>::type = 0)
-        : center(center_), color(glm::dvec3(0)),
-        m_halfLength(halfLength), m_halfWidth(halfWidth), m_halfHeight(halfHeight) {}
-
+    // Single constructor with conditional logic using if constexpr (C++17)
+    Box(const VecType& center_, 
+        double halfLength, double halfWidth, double halfHeight = 0.0)
+        : center(center_), color(0),
+        m_halfLength(halfLength), m_halfWidth(halfWidth), m_halfHeight(halfHeight)
+    {
+        if constexpr (std::is_same_v<VecType, glm::dvec2>) {
+            // For 2D, ignore halfHeight or set it to a default value
+            m_halfHeight = 0.0;
+        }
+    }
     // Methods
 
     // --- Length (Y-axis) Methods ---
