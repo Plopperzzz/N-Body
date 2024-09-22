@@ -54,7 +54,7 @@ methods:
 */
 class QuadTreeWrapper;
 
-class OctTree : public std::enable_shared_from_this<OctTree>
+class OctTree
 {
 	friend class TreeWrapper;
 
