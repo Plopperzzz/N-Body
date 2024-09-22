@@ -116,6 +116,7 @@ int main(int argc, char** argv)
 
 	Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
 	std::shared_ptr<Tree> root = std::make_shared<Tree>(bb, theta, epsilon);
+	root->setTheta(theta);
 	TreeWrapper3D TestTree(root);
 
 	TestTree.loadBodies(input_path);

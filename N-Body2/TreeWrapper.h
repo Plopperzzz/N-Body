@@ -37,6 +37,7 @@ public:
 };
 
 using TreeWrapper3D = TreeWrapper<glm::dvec3>;
+using TreeWrapper2D = TreeWrapper<glm::dvec2>;
 
 #include "TreeWrapper.tpp"
 #endif
