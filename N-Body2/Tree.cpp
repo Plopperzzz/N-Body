@@ -1,7 +1,7 @@
 #include "Tree.h"
 #include <iostream>
 
-const glm::dvec3 OctTree::basis[8] = {
+const glm::dvec3 Tree::basis[8] = {
 	glm::dvec3(-1, -1, -1), // Index 0: bSOUTHWEST
 	glm::dvec3(1, -1, -1),  // Index 1: bSOUTHEAST
 	glm::dvec3(-1, 1, -1),  // Index 2: bNORTHWEST
@@ -12,10 +12,10 @@ const glm::dvec3 OctTree::basis[8] = {
 	glm::dvec3(1, 1, 1)     // Index 7: tNORTHEAST
 };
 
-double OctTree::m_theta = 0.5;
-double OctTree::m_epsilon = 1e-3;
+double Tree::m_theta = 0.5;
+double Tree::m_epsilon = 1e-3;
 
-OctTree::OctTree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
+Tree::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
@@ -24,14 +24,14 @@ OctTree::OctTree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> par
 {
 }
 
-OctTree::OctTree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
+Tree::Tree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0))
 {
 }
-OctTree::OctTree(Box3D boundingBox, double& theta, double& epsilon) :
+Tree::Tree(Box3D boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0)),
 	m_totalMass(0),
@@ -39,48 +39,48 @@ OctTree::OctTree(Box3D boundingBox, double& theta, double& epsilon) :
 {
 }
 
-std::shared_ptr<OctTree>& OctTree::operator[](std::size_t childIndex) {
+std::shared_ptr<Tree>& Tree::operator[](std::size_t childIndex) {
 	return m_children[childIndex];
 }
 
-double OctTree::getLength() {
+double Tree::getLength() {
 	return m_boundingBox.getLength();
 }
 
-double OctTree::getMass() {
+double Tree::getMass() {
 	return m_totalMass;
 }
 
-double& OctTree::getTheta() {
+double& Tree::getTheta() {
 	return m_theta;
 }
 
-void OctTree::setTheta(double& theta) {
+void Tree::setTheta(double& theta) {
 	m_theta = theta;
 }
 
-double& OctTree::getEpsilon() {
+double& Tree::getEpsilon() {
 	return m_epsilon;
 }
 
-void OctTree::setEpsilon(double& epsilon) {
+void Tree::setEpsilon(double& epsilon) {
 	m_epsilon = epsilon;
 }
 
-int OctTree::getTotalDescendats() {
+int Tree::getTotalDescendats() {
 	return m_totalDescendants;
 }
 
-glm::dvec3 OctTree::getBoundinBoxColor() {
+glm::dvec3 Tree::getBoundinBoxColor() {
 	return m_boundingBox.color;
 }
 
-void OctTree::setBoundingBoxColor(const glm::dvec4& color)
+void Tree::setBoundingBoxColor(const glm::dvec4& color)
 {
 	m_boundingBox.color = color;
 }
 
-bool OctTree::isLeaf() {
+bool Tree::isLeaf() {
 	for (auto& child : m_children)
 	{
 		if (child)
@@ -89,7 +89,7 @@ bool OctTree::isLeaf() {
 	return true;
 }
 
-void OctTree::subdivide()
+void Tree::subdivide()
 {
 	double halfLength = m_boundingBox.getHalfLength() / 2;
 
@@ -99,7 +99,7 @@ void OctTree::subdivide()
 	int i = 0;
 	for (auto& child : m_children)
 	{
-		child = std::make_shared<OctTree>(
+		child = std::make_shared<Tree>(
 			Box3D(
 				thisCenter + halfLength * basis[i],
 				halfLength,
@@ -109,17 +109,17 @@ void OctTree::subdivide()
 	}
 }
 
-void OctTree::updateCenterOfMass(Node3D& body) {
+void Tree::updateCenterOfMass(Node3D& body) {
 	double mass = body.mass;
 	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
 }
 
-bool OctTree::inBounds(glm::dvec3& position) {
+bool Tree::inBounds(glm::dvec3& position) {
 	return m_boundingBox.contains(position);
 }
 
-OctTree::Octant OctTree::findOctant(glm::dvec3& point) {
+Tree::Octant Tree::findOctant(glm::dvec3& point) {
 
 	glm::dvec3 center = m_boundingBox.center;
 	int index = 0;
@@ -130,25 +130,25 @@ OctTree::Octant OctTree::findOctant(glm::dvec3& point) {
 
 	// Lookup table for quadrants
 	switch (index) {
-	case 0: return OctTree::bSOUTHWEST;  // (west, south, bottom)
-	case 1: return OctTree::bSOUTHEAST;  // (east, south, bottom)
-	case 2: return OctTree::bNORTHWEST;  // (west, north, bottom)
-	case 3: return OctTree::bNORTHEAST;  // (east, north, bottom)
-	case 4: return OctTree::tSOUTHWEST;  // (west, south, top)
-	case 5: return OctTree::tSOUTHEAST;  // (east, south, top)
-	case 6: return OctTree::tNORTHWEST;  // (west, north, top)
-	case 7: return OctTree::tNORTHEAST;  // (east, north, top)
-	default: return OctTree::QVOID;  // Should never happen
+	case 0: return Tree::bSOUTHWEST;  // (west, south, bottom)
+	case 1: return Tree::bSOUTHEAST;  // (east, south, bottom)
+	case 2: return Tree::bNORTHWEST;  // (west, north, bottom)
+	case 3: return Tree::bNORTHEAST;  // (east, north, bottom)
+	case 4: return Tree::tSOUTHWEST;  // (west, south, top)
+	case 5: return Tree::tSOUTHEAST;  // (east, south, top)
+	case 6: return Tree::tNORTHWEST;  // (west, north, top)
+	case 7: return Tree::tNORTHEAST;  // (east, north, top)
+	default: return Tree::QVOID;  // Should never happen
 	}
 }
 
-void OctTree::insertBody(Node3D& body)
+void Tree::insertBody(Node3D& body)
 {
 	if (inBounds(body.position) == false)
 	{
 		return;
 	}
-	OctTree::Octant octant, currentInhabitantNewQuadrant;
+	Tree::Octant octant, currentInhabitantNewQuadrant;
 
 	++m_totalDescendants;
 	updateCenterOfMass(body);

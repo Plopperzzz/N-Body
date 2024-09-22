@@ -2,7 +2,7 @@
 #include <nlohmann/json.hpp>
 #include <Windows.h>
 
-TreeWrapper::TreeWrapper(std::shared_ptr<OctTree> root) :
+TreeWrapper::TreeWrapper(std::shared_ptr<Tree> root) :
 	nodeList(),
 	m_totalBodies(0),
 	m_tree(root)
@@ -19,7 +19,7 @@ int TreeWrapper::getTotalBodies()
 	return m_totalBodies;
 }
 
-OctTree& TreeWrapper::getTree()
+Tree& TreeWrapper::getTree()
 {
 	return *m_tree;
 }
@@ -87,7 +87,7 @@ void TreeWrapper::calculateForce(Node3D& body, const glm::dvec3 position, const 
 		body.force.x, body.force.y, body.force.z);
 }
 
-void TreeWrapper::updateForce(Node3D& body, std::shared_ptr<OctTree> tree)
+void TreeWrapper::updateForce(Node3D& body, std::shared_ptr<Tree> tree)
 {
 	bool leaf =tree->isLeaf();
 	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
@@ -195,7 +195,7 @@ void TreeWrapper::update(const double& dt)
 
 	// Create new tree so we dont move bodies before all forces are calcualted
 	Box newBoundingBox = Box(m_tree->m_boundingBox.center, max, max, max);
-	std::shared_ptr<OctTree> newTree = std::make_shared<OctTree>(newBoundingBox);
+	std::shared_ptr<Tree> newTree = std::make_shared<Tree>(newBoundingBox);
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
 
@@ -224,7 +224,6 @@ void TreeWrapper::loadBodies(std::string file_path) {
 
 	json body_data = json::parse(file);
 	double max = 0;
-	double norm;
 
 	for (const auto& body_json : body_data["bodies"])
 	{
@@ -235,7 +234,7 @@ void TreeWrapper::loadBodies(std::string file_path) {
 		}
 	}
 	Box new_bounding_box = Box(m_tree->m_boundingBox.center, 2*max, 2*max, 2*max);
-	std::shared_ptr<OctTree> new_tree = std::make_shared<OctTree>(new_bounding_box);
+	std::shared_ptr<Tree> new_tree = std::make_shared<Tree>(new_bounding_box);
 	m_tree = new_tree;
 
 	// Loop through each body in the JSON data

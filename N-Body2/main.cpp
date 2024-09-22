@@ -115,11 +115,11 @@ int main(int argc, char** argv)
 	double rootLength = 1e5;
 
 	Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
-	std::shared_ptr<OctTree> root = std::make_shared<OctTree>(bb, theta, epsilon);
-	TreeWrapper Tree(root);
+	std::shared_ptr<Tree> root = std::make_shared<Tree>(bb, theta, epsilon);
+	TreeWrapper TestTree(root);
 
-	Tree.loadBodies(input_path);
-	rootLength = Tree.getTree().getLength();
+	TestTree.loadBodies(input_path);
+	rootLength = TestTree.getTree().getLength();
 
 
 	/*************************************************************/
@@ -131,25 +131,25 @@ int main(int argc, char** argv)
 	for (int i = 0; i < num; ++i) {
 
 		previous_time = total_time;
-		total_time += Utils::measureInvokeCall(&TreeWrapper::update, Tree, dt);
+		total_time += Utils::measureInvokeCall(&TreeWrapper::update, TestTree, dt);
 		if (plot)
-			Utils::outputPositions(Tree.nodeList, i*dt, orbitFile);
+			Utils::outputPositions(TestTree.nodeList, i*dt, orbitFile);
 
 		if (i % divFactor == 0 || i == num)
 			Utils::printPrograssBar(i, num, 80, "time - " + std::to_string((total_time - previous_time).count()));
 	}
 	std::cout << std::endl;
-	std::cout << "Update -- Average update time for - " << Tree.getTotalBodies() << " - bodies: " << std::setprecision(15) << total_time.count() / num << std::endl;
+	std::cout << "Update -- Average update time for - " << TestTree.getTotalBodies() << " - bodies: " << std::setprecision(15) << total_time.count() / num << std::endl;
 	orbitFile.close();
 
 	if (result.count("plot")) {
 		std::vector<std::string> node_names;
-		for (auto& body : Tree.nodeList) {
+		for (auto& body : TestTree.nodeList) {
 			node_names.push_back(body.name);
 		}
 
 		std::cout << script_path << " written\n";
-		Utils::gpScript3d(script_path, gif_path, data_name, Tree.getTree().getLength()/3, node_names);
+		Utils::gpScript3d(script_path, gif_path, data_name, TestTree.getTree().getLength()/3, node_names);
 		std::cout << "Calling " << script_path << "\n";
 		system(gnuCommand.c_str());
 		std::cout << "opening " << gif_path << "\n";

@@ -54,7 +54,7 @@ methods:
 */
 class QuadTreeWrapper;
 
-class OctTree
+class Tree
 {
 	friend class TreeWrapper;
 
@@ -63,7 +63,7 @@ private:
 
 	Box3D m_boundingBox;
 
-	std::array<std::shared_ptr<OctTree>, PARTITIONS> m_children;
+	std::array<std::shared_ptr<Tree>, PARTITIONS> m_children;
 
 	glm::dvec3 m_centerOfMass;
 
@@ -91,12 +91,12 @@ public:
 
 	// Methods
 public:
-	OctTree(Box3D boundingBox);
-	OctTree(Box3D boundingBox, Node3D& body);
-	OctTree(Box3D boundingBox, double& theta, double& epsilon);
+	Tree(Box3D boundingBox);
+	Tree(Box3D boundingBox, Node3D& body);
+	Tree(Box3D boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
-	std::shared_ptr<OctTree>& operator[](std::size_t childIndex);
+	std::shared_ptr<Tree>& operator[](std::size_t childIndex);
 
 	// Getters
 	double getLength();
