@@ -144,7 +144,7 @@
     <ClCompile Include="BoxBase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.tpp" />
-    <ClCompile Include="Tree.cpp" />
+    <ClCompile Include="Tree.tpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="TreeWrapper.tpp" />
     <ClCompile Include="Utils.cpp" />

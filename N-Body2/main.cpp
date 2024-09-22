@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	double rootLength = 1e5;
 
 	Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
-	std::shared_ptr<Tree> root = std::make_shared<Tree>(bb, theta, epsilon);
+	std::shared_ptr<Tree3D> root = std::make_shared<Tree3D>(bb, theta, epsilon);
 	root->setTheta(theta);
 	TreeWrapper3D TestTree(root);
 

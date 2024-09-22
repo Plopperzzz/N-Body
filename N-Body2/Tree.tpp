@@ -1,7 +1,10 @@
+#ifndef TREE_TPP
+#define TREE_TPP
 #include "Tree.h"
 #include <iostream>
 
-const glm::dvec3 Tree::basis[8] = {
+template <typename VecType>
+const glm::dvec3 Tree<VecType>::basis[8] = {
 	glm::dvec3(-1, -1, -1), // Index 0: bSOUTHWEST
 	glm::dvec3(1, -1, -1),  // Index 1: bSOUTHEAST
 	glm::dvec3(-1, 1, -1),  // Index 2: bNORTHWEST
@@ -12,10 +15,13 @@ const glm::dvec3 Tree::basis[8] = {
 	glm::dvec3(1, 1, 1)     // Index 7: tNORTHEAST
 };
 
-double Tree::m_theta = 0.5;
-double Tree::m_epsilon = 1e-3;
+template <typename VecType>
+double Tree<VecType>::m_theta = 0.5;
+template <typename VecType>
+double Tree<VecType>::m_epsilon = 1e-3;
 
-Tree::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
+template <typename VecType>
+Tree<VecType>::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
@@ -24,14 +30,17 @@ Tree::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
 {
 }
 
-Tree::Tree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
+template <typename VecType>
+Tree<VecType>::Tree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0))
 {
 }
-Tree::Tree(Box3D boundingBox, double& theta, double& epsilon) :
+
+template <typename VecType>
+Tree<VecType>::Tree(Box3D boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
 	m_centerOfMass(glm::dvec3(0)),
 	m_totalMass(0),
@@ -39,48 +48,59 @@ Tree::Tree(Box3D boundingBox, double& theta, double& epsilon) :
 {
 }
 
-std::shared_ptr<Tree>& Tree::operator[](std::size_t childIndex) {
+template <typename VecType>
+std::shared_ptr<Tree<VecType>>& Tree<VecType>::operator[](std::size_t childIndex) {
 	return m_children[childIndex];
 }
 
-double Tree::getLength() {
+template <typename VecType>
+double Tree<VecType>::getLength() {
 	return m_boundingBox.getLength();
 }
 
-double Tree::getMass() {
+template <typename VecType>
+double Tree<VecType>::getMass() {
 	return m_totalMass;
 }
 
-double& Tree::getTheta() {
+template <typename VecType>
+double& Tree<VecType>::getTheta() {
 	return m_theta;
 }
 
-void Tree::setTheta(double& theta) {
+template <typename VecType>
+void Tree<VecType>::setTheta(double& theta) {
 	m_theta = theta;
 }
 
-double& Tree::getEpsilon() {
+template <typename VecType>
+double& Tree<VecType>::getEpsilon() {
 	return m_epsilon;
 }
 
-void Tree::setEpsilon(double& epsilon) {
+template <typename VecType>
+void Tree<VecType>::setEpsilon(double& epsilon) {
 	m_epsilon = epsilon;
 }
 
-int Tree::getTotalDescendats() {
+template <typename VecType>
+int Tree<VecType>::getTotalDescendats() {
 	return m_totalDescendants;
 }
 
-glm::dvec3 Tree::getBoundinBoxColor() {
+template <typename VecType>
+glm::dvec3 Tree<VecType>::getBoundinBoxColor() {
 	return m_boundingBox.color;
 }
 
-void Tree::setBoundingBoxColor(const glm::dvec4& color)
+template <typename VecType>
+void Tree<VecType>::setBoundingBoxColor(const glm::dvec4& color)
 {
 	m_boundingBox.color = color;
 }
 
-bool Tree::isLeaf() {
+template <typename VecType>
+bool Tree<VecType>::isLeaf() {
 	for (auto& child : m_children)
 	{
 		if (child)
@@ -89,7 +109,8 @@ bool Tree::isLeaf() {
 	return true;
 }
 
-void Tree::subdivide()
+template <typename VecType>
+void Tree<VecType>::subdivide()
 {
 	double halfLength = m_boundingBox.getHalfLength() / 2;
 
@@ -99,7 +120,7 @@ void Tree::subdivide()
 	int i = 0;
 	for (auto& child : m_children)
 	{
-		child = std::make_shared<Tree>(
+		child = std::make_shared<Tree<VecType>>(
 			Box3D(
 				thisCenter + halfLength * basis[i],
 				halfLength,
@@ -109,17 +130,20 @@ void Tree::subdivide()
 	}
 }
 
-void Tree::updateCenterOfMass(Node3D& body) {
+template <typename VecType>
+void Tree<VecType>::updateCenterOfMass(Node3D& body) {
 	double mass = body.mass;
 	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
 }
 
-bool Tree::inBounds(glm::dvec3& position) {
+template <typename VecType>
+bool Tree<VecType>::inBounds(glm::dvec3& position) {
 	return m_boundingBox.contains(position);
 }
 
-Tree::Region Tree::findOctant(glm::dvec3& point) {
+template <typename VecType>
+typename Tree<VecType>::Region Tree<VecType>::findOctant(glm::dvec3& point) {
 
 	glm::dvec3 center = m_boundingBox.center;
 	int index = 0;
@@ -142,13 +166,14 @@ Tree::Region Tree::findOctant(glm::dvec3& point) {
 	}
 }
 
-void Tree::insertBody(Node3D& body)
+template <typename VecType>
+void Tree<VecType>::insertBody(Node3D& body)
 {
 	if (inBounds(body.position) == false)
 	{
 		return;
 	}
-	Tree::Region octant, currentInhabitantNewQuadrant;
+	Tree<VecType>::Region octant, currentInhabitantNewQuadrant;
 
 	++m_totalDescendants;
 	updateCenterOfMass(body);
@@ -192,3 +217,5 @@ void Tree::insertBody(Node3D& body)
 
 	return;
 }
+
+#endif

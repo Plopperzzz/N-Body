@@ -1,3 +1,5 @@
+#ifndef TREE_H
+#define TREE_H
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
@@ -55,6 +57,7 @@ methods:
 template <typename VecType>
 class TreeWrapper;
 
+template <typename VecType>
 class Tree
 {
 template <typename VecType>
@@ -65,7 +68,7 @@ private:
 
 	Box3D m_boundingBox;
 
-	std::array<std::shared_ptr<Tree>, PARTITIONS> m_children;
+	std::array<std::shared_ptr<Tree<VecType>>, PARTITIONS> m_children;
 
 	glm::dvec3 m_centerOfMass;
 
@@ -93,12 +96,12 @@ public:
 
 	// Methods
 public:
-	Tree(Box3D boundingBox);
-	Tree(Box3D boundingBox, Node3D& body);
-	Tree(Box3D boundingBox, double& theta, double& epsilon);
+	Tree<VecType>(Box3D boundingBox);
+	Tree<VecType>(Box3D boundingBox, Node3D& body);
+	Tree<VecType>(Box3D boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
-	std::shared_ptr<Tree>& operator[](std::size_t childIndex);
+	std::shared_ptr<Tree<VecType>>& operator[](std::size_t childIndex);
 
 	// Getters
 	double getLength();
@@ -133,4 +136,8 @@ public:
 	// force the tree to grow to contain it.
 	Region findOctant(glm::dvec3& point);
 };
+using Tree2D = Tree<glm::dvec2>;
+using Tree3D = Tree<glm::dvec3>;
+#include "Tree.tpp"
+#endif
 

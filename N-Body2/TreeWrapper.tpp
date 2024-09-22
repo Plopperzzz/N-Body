@@ -5,7 +5,7 @@
 #include <Windows.h>
 
 template <typename VecType>
-TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree> root) :
+TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree<VecType>> root) :
 	nodeList(),
 	m_totalBodies(0),
 	m_tree(root)
@@ -25,7 +25,7 @@ int TreeWrapper<VecType>::getTotalBodies()
 }
 
 template <typename VecType>
-Tree& TreeWrapper<VecType>::getTree()
+Tree<VecType>& TreeWrapper<VecType>::getTree()
 {
 	return *m_tree;
 }
@@ -97,7 +97,7 @@ void TreeWrapper<VecType>::calculateForce(Node3D& body, const glm::dvec3 positio
 }
 
 template <typename VecType>
-void TreeWrapper<VecType>::updateForce(Node3D& body, std::shared_ptr<Tree> tree)
+void TreeWrapper<VecType>::updateForce(Node3D& body, std::shared_ptr<Tree<VecType>> tree)
 {
 	bool leaf =tree->isLeaf();
 	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
@@ -206,7 +206,7 @@ void TreeWrapper<VecType>::update(const double& dt)
 
 	// Create new tree so we dont move bodies before all forces are calcualted
 	Box newBoundingBox = Box(m_tree->m_boundingBox.center, max, max, max);
-	std::shared_ptr<Tree> newTree = std::make_shared<Tree>(newBoundingBox);
+	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox);
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
 
@@ -246,7 +246,7 @@ void TreeWrapper<VecType>::loadBodies(std::string file_path) {
 		}
 	}
 	Box new_bounding_box = Box(m_tree->m_boundingBox.center, 2*max, 2*max, 2*max);
-	std::shared_ptr<Tree> new_tree = std::make_shared<Tree>(new_bounding_box);
+	std::shared_ptr<Tree<VecType>> new_tree = std::make_shared<Tree<VecType>>(new_bounding_box);
 	m_tree = new_tree;
 
 	// Loop through each body in the JSON data
@@ -259,7 +259,7 @@ void TreeWrapper<VecType>::loadBodies(std::string file_path) {
 
 		glm::dvec3 pos(body_json["position"][0], body_json["position"][1], body_json["position"][2]);
 
-		Node body = Node(
+		Node<VecType> body = Node<VecType>(
 			l_id, l_name,
 			glm::dvec3(body_json["position"][0], body_json["position"][1], body_json["position"][2]),
 			glm::dvec3(body_json["velocity"][0], body_json["velocity"][1], body_json["velocity"][2]),
