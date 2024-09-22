@@ -54,40 +54,12 @@ methods:
 */
 class QuadTreeWrapper;
 
-//struct Node {
-//private:
-//	int m_id;
-//
-//public:
-//	std::string name;
-//	glm::dvec3 position;
-//	glm::dvec3 velocity;
-//	glm::dvec3 force;
-//	//std::shared_ptr<std::vector<int>> path;
-//	double mass;
-//	double radius;
-//
-//
-//public:
-//
-//	// Default constructor
-//	Node();
-//
-//	// Creates new node with given properties
-//	Node(int id, std::string name, glm::dvec3 position, glm::dvec3 velocity, double const mass, double const radius);
-//
-//	// Gets node ID
-//	int getId();
-//	void setId(int id);
-//
-//};
-//
 class OctTree : public std::enable_shared_from_this<OctTree>
 {
 	friend class TreeWrapper;
 
 private:
-	Node m_body;
+	Node3D m_body;
 
 	Box3D m_boundingBox;
 
@@ -120,7 +92,7 @@ public:
 	// Methods
 public:
 	OctTree(Box3D boundingBox);
-	OctTree(Box3D boundingBox, Node& body);
+	OctTree(Box3D boundingBox, Node3D& body);
 	OctTree(Box3D boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
@@ -147,8 +119,8 @@ public:
 
 	// void
 	void subdivide();
-	void insertBody(Node& body);
-	void updateCenterOfMass(Node& body);
+	void insertBody(Node3D& body);
+	void updateCenterOfMass(Node3D& body);
 
 
 	// returns the parent container for a point assuming an unbounded box

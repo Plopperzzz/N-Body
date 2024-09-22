@@ -6,13 +6,13 @@ void Utils::signalHandler(int signum) {
 
 	exit(signum);
 }
-void Utils::outputPositions(std::vector<Node> bodies, double time, std::ofstream& file) {
-	file << time;
-	for (auto& node : bodies) {
-		file << "," << node.position.x << "," << node.position.y << "," << node.position.z;
-	}
-	file << "\n";
-}
+//void Utils::outputPositions(std::vector<Node3D> bodies, double time, std::ofstream& file) {
+//	file << time;
+//	for (auto& node : bodies) {
+//		file << "," << node.position.x << "," << node.position.y << "," << node.position.z;
+//	}
+//	file << "\n";
+//}
 
 void Utils::setClipboardText(const std::string& text) {
 	// Open the clipboard

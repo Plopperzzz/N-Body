@@ -9,7 +9,7 @@ TreeWrapper::TreeWrapper(std::shared_ptr<OctTree> root) :
 {
 }
 
-Node& TreeWrapper::operator[](std::size_t index)
+Node3D& TreeWrapper::operator[](std::size_t index)
 {
 	return nodeList[index];
 }
@@ -24,21 +24,21 @@ OctTree& TreeWrapper::getTree()
 	return *m_tree;
 }
 
-void TreeWrapper::insertBody(Node& body)
+void TreeWrapper::insertBody(Node3D& body)
 {
 	// TODO: grow to adapt to new nodes
 	// Use the Tree insertion function
 	m_tree->insertBody(body);
 
 	// Create a copy
-	Node nodeCopy = body;
+	Node3D nodeCopy = body;
 	nodeList.push_back(nodeCopy);
 	++m_totalBodies;
 }
 
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
-void TreeWrapper::calculateForce(Node& body, const Node& other)
+void TreeWrapper::calculateForce(Node3D& body, const Node3D& other)
 {
 	glm::dvec3 distance = body.position - other.position;
 
@@ -66,7 +66,7 @@ void TreeWrapper::calculateForce(Node& body, const Node& other)
 
 // Calculates the forces between a body and a point mass, and updates `body`s force
 // Used in case we are calculating the force between a Node and a center of mass
-void TreeWrapper::calculateForce(Node& body, const glm::dvec3 position, const double& mass)
+void TreeWrapper::calculateForce(Node3D& body, const glm::dvec3 position, const double& mass)
 {
 	glm::dvec3 distance = body.position - position;
 
@@ -87,7 +87,7 @@ void TreeWrapper::calculateForce(Node& body, const glm::dvec3 position, const do
 		body.force.x, body.force.y, body.force.z);
 }
 
-void TreeWrapper::updateForce(Node& body, std::shared_ptr<OctTree> tree)
+void TreeWrapper::updateForce(Node3D& body, std::shared_ptr<OctTree> tree)
 {
 	bool leaf =tree->isLeaf();
 	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
@@ -150,7 +150,7 @@ void TreeWrapper::update(const double& dt)
 
 	bool expand = false;
 
-	for (Node& body : nodeList) {
+	for (Node3D& body : nodeList) {
 		// This should never happen, but hey.
 		if (body.getId() == -1) {
 			std::cout << "found null body in update loop\n";
@@ -199,8 +199,8 @@ void TreeWrapper::update(const double& dt)
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
 
-	for (Node& body : nodeList) {
-		Node bodyCopy = body;
+	for (Node3D& body : nodeList) {
+		Node3D bodyCopy = body;
 		newTree->insertBody(bodyCopy);
 	}
 

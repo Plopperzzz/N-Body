@@ -40,7 +40,7 @@ const glm::dvec3 OctTree::basis[8] = {
 double OctTree::m_theta = 0.5;
 double OctTree::m_epsilon = 1e-3;
 
-OctTree::OctTree(Box3D boundingBox, Node& body)://, std::weak_ptr<OctTree> parent) :
+OctTree::OctTree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(glm::dvec3(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
@@ -134,7 +134,7 @@ void OctTree::subdivide()
 	}
 }
 
-void OctTree::updateCenterOfMass(Node& body) {
+void OctTree::updateCenterOfMass(Node3D& body) {
 	double mass = body.mass;
 	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
@@ -167,7 +167,7 @@ OctTree::Octant OctTree::findOctant(glm::dvec3& point) {
 	}
 }
 
-void OctTree::insertBody(Node& body)
+void OctTree::insertBody(Node3D& body)
 {
 	if (inBounds(body.position) == false)
 	{
@@ -204,8 +204,8 @@ void OctTree::insertBody(Node& body)
 		// subdivide and we need to re-insert the body that previously
 		// populated the current quad
 
-		Node currentInhabitant = m_body;
-		m_body = Node();
+		Node3D currentInhabitant = m_body;
+		m_body = Node3D();
 
 		currentInhabitantNewQuadrant = findOctant(currentInhabitant.position);
 

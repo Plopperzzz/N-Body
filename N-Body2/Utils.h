@@ -24,7 +24,15 @@ class Utils
 public:
 	static void setClipboardText(const std::string& text);
 
-	static void outputPositions(std::vector<Node> bodies, double time, std::ofstream& file);
+	template <typename NodeType>
+	static void outputPositions(std::vector<NodeType> bodies, double time, std::ofstream& file) {
+		file << time;
+		for (auto& node : bodies) {
+			//file << "," << node.position.x << "," << node.position.y << "," << node.position.z;
+			node.OutputPositionToStream(file);
+		}
+		file << "\n";
+	}
 
 	// Function to measure execution time with std::invoke
 	template <typename Func, typename Obj, typename... Args>
