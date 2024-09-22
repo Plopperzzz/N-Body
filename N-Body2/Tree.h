@@ -77,7 +77,7 @@ private:
 	
 public:
 	// Members
-	enum Octant {
+	enum Region {
 		bSOUTHWEST = 0,
 		bSOUTHEAST = 1,
 		bNORTHWEST = 2,
@@ -129,6 +129,6 @@ public:
 	//
 	// Use: to find which portion of a smaller tree a point belongs to in order to 
 	// force the tree to grow to contain it.
-	Octant findOctant(glm::dvec3& point);
+	Region findOctant(glm::dvec3& point);
 };
 

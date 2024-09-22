@@ -119,7 +119,7 @@ bool Tree::inBounds(glm::dvec3& position) {
 	return m_boundingBox.contains(position);
 }
 
-Tree::Octant Tree::findOctant(glm::dvec3& point) {
+Tree::Region Tree::findOctant(glm::dvec3& point) {
 
 	glm::dvec3 center = m_boundingBox.center;
 	int index = 0;
@@ -148,7 +148,7 @@ void Tree::insertBody(Node3D& body)
 	{
 		return;
 	}
-	Tree::Octant octant, currentInhabitantNewQuadrant;
+	Tree::Region octant, currentInhabitantNewQuadrant;
 
 	++m_totalDescendants;
 	updateCenterOfMass(body);
