@@ -13,7 +13,7 @@ TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree<VecType>> root) :
 }
 
 template <typename VecType>
-Node3D& TreeWrapper<VecType>::operator[](std::size_t index)
+Node<VecType>& TreeWrapper<VecType>::operator[](std::size_t index)
 {
 	return nodeList[index];
 }
@@ -31,14 +31,14 @@ Tree<VecType>& TreeWrapper<VecType>::getTree()
 }
 
 template <typename VecType>
-void TreeWrapper<VecType>::insertBody(Node3D& body)
+void TreeWrapper<VecType>::insertBody(Node<VecType>& body)
 {
 	// TODO: grow to adapt to new nodes
 	// Use the Tree insertion function
 	m_tree->insertBody(body);
 
 	// Create a copy
-	Node3D nodeCopy = body;
+	Node<VecType> nodeCopy = body;
 	nodeList.push_back(nodeCopy);
 	++m_totalBodies;
 }
@@ -46,9 +46,9 @@ void TreeWrapper<VecType>::insertBody(Node3D& body)
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
 template <typename VecType>
-void TreeWrapper<VecType>::calculateForce(Node3D& body, const Node3D& other)
+void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecType>& other)
 {
-	glm::dvec3 distance = body.position - other.position;
+	VecType distance = body.position - other.position;
 
 	double norm = glm::length(distance);
 	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
@@ -75,9 +75,9 @@ void TreeWrapper<VecType>::calculateForce(Node3D& body, const Node3D& other)
 // Calculates the forces between a body and a point mass, and updates `body`s force
 // Used in case we are calculating the force between a Node and a center of mass
 template <typename VecType>
-void TreeWrapper<VecType>::calculateForce(Node3D& body, const glm::dvec3 position, const double& mass)
+void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const VecType position, const double& mass)
 {
-	glm::dvec3 distance = body.position - position;
+	VecType distance = body.position - position;
 
 	double norm = glm::length(distance);
 	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
@@ -97,7 +97,7 @@ void TreeWrapper<VecType>::calculateForce(Node3D& body, const glm::dvec3 positio
 }
 
 template <typename VecType>
-void TreeWrapper<VecType>::updateForce(Node3D& body, std::shared_ptr<Tree<VecType>> tree)
+void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree)
 {
 	bool leaf =tree->isLeaf();
 	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
@@ -161,7 +161,7 @@ void TreeWrapper<VecType>::update(const double& dt)
 
 	bool expand = false;
 
-	for (Node3D& body : nodeList) {
+	for (Node<VecType>& body : nodeList) {
 		// This should never happen, but hey.
 		if (body.getId() == -1) {
 			std::cout << "found null body in update loop\n";
@@ -170,18 +170,18 @@ void TreeWrapper<VecType>::update(const double& dt)
 		/** Velocity verlet integration **/
 
 		// Calculate acceleration from force and get the new position
-		glm::dvec3 acc = body.force / body.mass;
-		glm::dvec3 new_pos = body.position + body.velocity * dt + acc * (dt * dt * 0.5);
+		VecType acc = body.force / body.mass;
+		VecType new_pos = body.position + body.velocity * dt + acc * (dt * dt * 0.5);
 
 		// Reset the force
-		body.force = glm::dvec3(0);
+		body.force = VecType(0);
 
 		updateForce(body, m_tree);
 
 		// Getting ready to create a new body to insert into newTree
-		glm::dvec3 new_force = body.force;
-		glm::dvec3 new_accel = new_force / body.mass;
-		glm::dvec3 new_vel = body.velocity + (acc + new_accel) * (dt * 0.5);
+		VecType new_force = body.force;
+		VecType new_accel = new_force / body.mass;
+		VecType new_vel = body.velocity + (acc + new_accel) * (dt * 0.5);
 
 		body.position = new_pos;
 		body.velocity = new_vel;
@@ -205,13 +205,13 @@ void TreeWrapper<VecType>::update(const double& dt)
 	}
 
 	// Create new tree so we dont move bodies before all forces are calcualted
-	Box newBoundingBox = Box(m_tree->m_boundingBox.center, max, max, max);
+	Box<VecType> newBoundingBox = Box<VecType>(m_tree->m_boundingBox.center, max, max, max);
 	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox);
 
 	// Create new wrapper to utilize its insertion that will expand the member tree if needed
 
-	for (Node3D& body : nodeList) {
-		Node3D bodyCopy = body;
+	for (Node<VecType>& body : nodeList) {
+		Node<VecType> bodyCopy = body;
 		newTree->insertBody(bodyCopy);
 	}
 
@@ -226,7 +226,7 @@ void TreeWrapper<VecType>::update(const double& dt)
 using json = nlohmann::json;
 
 template <typename VecType>
-void TreeWrapper<VecType>::loadBodies(std::string file_path) {
+void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 	std::ifstream file(file_path);
 
 	if (!file.is_open()) {
@@ -239,13 +239,23 @@ void TreeWrapper<VecType>::loadBodies(std::string file_path) {
 
 	for (const auto& body_json : body_data["bodies"])
 	{
-		double current_distance = glm::length(glm::dvec3(body_json["position"][0], body_json["position"][1], body_json["position"][2]));
+		double current_distance;
+		if constexpr (VecDimensions<VecType>::value == 3)
+		{
+			current_distance = glm::length(VecType(body_json["position"][0], body_json["position"][1], body_json["position"][2]));
+		}
+		else
+		{
+			current_distance = glm::length(VecType(body_json["position"][0], body_json["position"][1]));
+		}
 		if (current_distance > max) 
 		{
 			max = current_distance;
 		}
 	}
-	Box new_bounding_box = Box(m_tree->m_boundingBox.center, 2*max, 2*max, 2*max);
+
+	Box<VecType> new_bounding_box(m_tree->m_boundingBox.center, 2*max, 2*max, 2*max);
+
 	std::shared_ptr<Tree<VecType>> new_tree = std::make_shared<Tree<VecType>>(new_bounding_box);
 	m_tree = new_tree;
 
@@ -257,12 +267,22 @@ void TreeWrapper<VecType>::loadBodies(std::string file_path) {
 		double l_radius = body_json["radius"];
 		std::string l_name = body_json["name"];
 
-		glm::dvec3 pos(body_json["position"][0], body_json["position"][1], body_json["position"][2]);
+		VecType pos, vel;
+
+		if constexpr (VecDimensions<VecType>::value == 3)
+		{
+			pos = VecType(body_json["position"][0], body_json["position"][1], body_json["position"][2]);
+			vel = VecType(body_json["velocity"][0], body_json["velocity"][1], body_json["velocity"][2]);
+		}
+		else
+		{
+			pos = VecType(body_json["position"][0], body_json["position"][1]);
+			vel = VecType(body_json["velocity"][0], body_json["velocity"][1]);
+		}
 
 		Node<VecType> body = Node<VecType>(
 			l_id, l_name,
-			glm::dvec3(body_json["position"][0], body_json["position"][1], body_json["position"][2]),
-			glm::dvec3(body_json["velocity"][0], body_json["velocity"][1], body_json["velocity"][2]),
+			pos, vel,
 			l_mass, l_radius);
 
 		insertBody(body);

@@ -8,7 +8,7 @@ template <typename VecType>
 class TreeWrapper
 {
 public:
-	std::vector<Node3D> nodeList;
+	std::vector<Node<VecType>> nodeList;
 
 private:
 	std::shared_ptr<Tree<VecType>> m_tree;
@@ -23,17 +23,17 @@ public:
 
 	Tree<VecType>& getTree();
 
-	Node3D& operator[](std::size_t index);
+	Node<VecType>& operator[](std::size_t index);
 
-	void insertBody(Node3D& body);
+	void insertBody(Node<VecType>& body);
 
-	void calculateForce(Node3D& body, const Node3D& other);
-	void calculateForce(Node3D& body, const glm::dvec3 position, const double& mass);
+	void calculateForce(Node<VecType>& body, const Node<VecType>& other);
+	void calculateForce(Node<VecType>& body, const VecType position, const double& mass);
 
-	void updateForce(Node3D& body, std::shared_ptr<Tree<VecType>> tree);
+	void updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree);
 	void update(const double& dt);
 
-	void loadBodies(std::string filePath);
+	void loadBodies(const std::string& filePath);
 };
 
 using TreeWrapper3D = TreeWrapper<glm::dvec3>;

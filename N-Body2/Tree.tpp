@@ -21,8 +21,8 @@ template <typename VecType>
 double Tree<VecType>::m_epsilon = 1e-3;
 
 template <typename VecType>
-Tree<VecType>::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> parent) :
-	m_centerOfMass(glm::dvec3(0)),
+Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body)://, std::weak_ptr<OctTree> parent) :
+	m_centerOfMass(VecType(0)),
 	m_boundingBox(boundingBox),
 	m_body(body),
 	m_totalDescendants(0),
@@ -31,18 +31,18 @@ Tree<VecType>::Tree(Box3D boundingBox, Node3D& body)://, std::weak_ptr<OctTree> 
 }
 
 template <typename VecType>
-Tree<VecType>::Tree(Box3D boundingBox)://, std::weak_ptr<OctTree> parent) :
+Tree<VecType>::Tree(Box<VecType> boundingBox)://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
-	m_centerOfMass(glm::dvec3(0))
+	m_centerOfMass(VecType(0))
 {
 }
 
 template <typename VecType>
-Tree<VecType>::Tree(Box3D boundingBox, double& theta, double& epsilon) :
+Tree<VecType>::Tree(Box<VecType> boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
-	m_centerOfMass(glm::dvec3(0)),
+	m_centerOfMass(VecType(0)),
 	m_totalMass(0),
 	m_totalDescendants(0)
 {
@@ -94,7 +94,7 @@ glm::dvec3 Tree<VecType>::getBoundinBoxColor() {
 }
 
 template <typename VecType>
-void Tree<VecType>::setBoundingBoxColor(const glm::dvec4& color)
+void Tree<VecType>::setBoundingBoxColor(const glm::dvec3& color)
 {
 	m_boundingBox.color = color;
 }
@@ -115,14 +115,14 @@ void Tree<VecType>::subdivide()
 	double halfLength = m_boundingBox.getHalfLength() / 2;
 
 	// retrieve once and use in loop
-	glm::dvec3 thisCenter = m_boundingBox.center;
+	VecType thisCenter = m_boundingBox.center;
 
 	int i = 0;
 	for (auto& child : m_children)
 	{
 		child = std::make_shared<Tree<VecType>>(
-			Box3D(
-				thisCenter + halfLength * basis[i],
+			Box<VecType>(
+				thisCenter + halfLength * (VecType(basis[i])),
 				halfLength,
 				halfLength,
 				halfLength));
@@ -131,26 +131,29 @@ void Tree<VecType>::subdivide()
 }
 
 template <typename VecType>
-void Tree<VecType>::updateCenterOfMass(Node3D& body) {
+void Tree<VecType>::updateCenterOfMass(Node<VecType>& body) {
 	double mass = body.mass;
 	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
 }
 
 template <typename VecType>
-bool Tree<VecType>::inBounds(glm::dvec3& position) {
+bool Tree<VecType>::inBounds(VecType& position) {
 	return m_boundingBox.contains(position);
 }
 
 template <typename VecType>
-typename Tree<VecType>::Region Tree<VecType>::findOctant(glm::dvec3& point) {
+typename Tree<VecType>::Region Tree<VecType>::findRegion(VecType& point) {
 
-	glm::dvec3 center = m_boundingBox.center;
+	VecType center = m_boundingBox.center;
 	int index = 0;
 
 	if (point.x > center.x) index |= 1;  // 1 if east, 0 if west
 	if (point.y > center.y) index |= 2;  // 1 if north, 0 if south
-	if (point.z > center.z) index |= 4;  // 1 if top, 0 if bottom
+
+	if constexpr (VecDimensions<VecType>::value == 3) {
+		if (point.z > center.z) index |= 4;  // 1 if top, 0 if bottom
+	}
 
 	// Lookup table for quadrants
 	switch (index) {
@@ -167,7 +170,7 @@ typename Tree<VecType>::Region Tree<VecType>::findOctant(glm::dvec3& point) {
 }
 
 template <typename VecType>
-void Tree<VecType>::insertBody(Node3D& body)
+void Tree<VecType>::insertBody(Node<VecType>& body)
 {
 	if (inBounds(body.position) == false)
 	{
@@ -178,7 +181,7 @@ void Tree<VecType>::insertBody(Node3D& body)
 	++m_totalDescendants;
 	updateCenterOfMass(body);
 
-	octant = findOctant(body.position);
+	octant = findRegion(body.position);
 
 	if (m_body.getId() == -1 && isLeaf()) {
 
@@ -204,10 +207,10 @@ void Tree<VecType>::insertBody(Node3D& body)
 		// subdivide and we need to re-insert the body that previously
 		// populated the current quad
 
-		Node3D currentInhabitant = m_body;
-		m_body = Node3D();
+		Node<VecType> currentInhabitant = m_body;
+		m_body = Node<VecType>();
 
-		currentInhabitantNewQuadrant = findOctant(currentInhabitant.position);
+		currentInhabitantNewQuadrant = findRegion(currentInhabitant.position);
 
 		subdivide();
 

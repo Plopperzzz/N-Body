@@ -163,7 +163,7 @@ void Utils::gpScript(std::string script_name, std::string gif_name, std::string 
 	int i = 0;
 	for (auto& body_name : body_names) {
 		plotData += "'" + data_name + "' using " + std::to_string(i + 2) + ":" + std::to_string(i + 3) + "  with lines lw 2 notitle, \\\n";
-		i += 3;
+		i += 2;
 	}
 
 	auto setOutput = "# Finalize the output\nset output\n";

@@ -87,6 +87,15 @@ public:
 	void OutputPositionToStream(std::ofstream& file);
 };
 
+// Helper to determine vector dimensions
+template <typename VecType>
+struct VecDimensions;
+
+template <glm::length_t L, typename T, glm::precision P>
+struct VecDimensions<glm::vec<L, T, P>> {
+	static constexpr size_t value = L;
+};
+
 #include "Node.tpp"
 
 #endif

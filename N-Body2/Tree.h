@@ -54,6 +54,21 @@ methods:
 	     	+--------------+--------------+
 
 */
+// Primary template: Not defined to trigger a compile-time error for unsupported types
+template <typename VecType>
+struct TreePartitions;
+
+// Specialization for glm::dvec2
+template <>
+struct TreePartitions<glm::dvec2> {
+	static constexpr size_t value = 4;
+};
+
+// Specialization for glm::dvec3
+template <>
+struct TreePartitions<glm::dvec3> {
+	static constexpr size_t value = 8;
+};
 template <typename VecType>
 class TreeWrapper;
 
@@ -64,13 +79,13 @@ template <typename VecType>
 	friend class TreeWrapper;
 
 private:
-	Node3D m_body;
+	Node<VecType> m_body;
 
-	Box3D m_boundingBox;
+	Box<VecType> m_boundingBox;
+	static constexpr size_t partitions = TreePartitions<VecType>::value;
+	std::array<std::shared_ptr<Tree<VecType>>, partitions> m_children;
 
-	std::array<std::shared_ptr<Tree<VecType>>, PARTITIONS> m_children;
-
-	glm::dvec3 m_centerOfMass;
+	VecType m_centerOfMass;
 
 	static const glm::dvec3 basis[8];
 
@@ -96,9 +111,9 @@ public:
 
 	// Methods
 public:
-	Tree<VecType>(Box3D boundingBox);
-	Tree<VecType>(Box3D boundingBox, Node3D& body);
-	Tree<VecType>(Box3D boundingBox, double& theta, double& epsilon);
+	Tree<VecType>(Box<VecType> boundingBox);
+	Tree<VecType>(Box<VecType> boundingBox, Node<VecType>& body);
+	Tree<VecType>(Box<VecType> boundingBox, double& theta, double& epsilon);
 
 	// Returns QuadTree child at childIndex
 	std::shared_ptr<Tree<VecType>>& operator[](std::size_t childIndex);
@@ -116,16 +131,16 @@ public:
 	// Setters
 	void setTheta(double& newTheta);
 	void setEpsilon(double& newEpsilon);
-	void setBoundingBoxColor(const glm::dvec4& color);
+	void setBoundingBoxColor(const glm::dvec3& color);
 
 	// bool
 	bool isLeaf();
-	bool inBounds(glm::dvec3& position);
+	bool inBounds(VecType& position);
 
 	// void
 	void subdivide();
-	void insertBody(Node3D& body);
-	void updateCenterOfMass(Node3D& body);
+	void insertBody(Node<VecType>& body);
+	void updateCenterOfMass(Node<VecType>& body);
 
 
 	// returns the parent container for a point assuming an unbounded box
@@ -134,7 +149,7 @@ public:
 	//
 	// Use: to find which portion of a smaller tree a point belongs to in order to 
 	// force the tree to grow to contain it.
-	Region findOctant(glm::dvec3& point);
+	Region findRegion(VecType& point);
 };
 using Tree2D = Tree<glm::dvec2>;
 using Tree3D = Tree<glm::dvec3>;

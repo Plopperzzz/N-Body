@@ -38,10 +38,25 @@ private:
 
 public:
     // Single constructor with conditional logic using if constexpr (C++17)
-    Box(const VecType& center_, 
-        double halfLength, double halfWidth, double halfHeight = 0.0)
-        : center(center_), color(0),
-        m_halfLength(halfLength), m_halfWidth(halfWidth), m_halfHeight(halfHeight)
+    Box():
+        center(VecType()),
+        color(0),
+        m_halfLength(),
+        m_halfWidth(),
+        m_halfHeight()
+    {
+        if constexpr (std::is_same_v<VecType, glm::dvec2>) {
+            // For 2D, ignore halfHeight or set it to a default value
+            m_halfHeight = 0.0;
+        }
+    }
+    // Single constructor with conditional logic using if constexpr (C++17)
+    Box(const VecType& center_, double halfLength, double halfWidth, double halfHeight = 0.0):
+        center(center_),
+        color(0),
+        m_halfLength(halfLength),
+        m_halfWidth(halfWidth),
+        m_halfHeight(halfHeight)
     {
         if constexpr (std::is_same_v<VecType, glm::dvec2>) {
             // For 2D, ignore halfHeight or set it to a default value
