@@ -1,9 +1,11 @@
 #pragma once
+#ifndef NODE_H
+#define NODE_H
+
 #include <glm/glm.hpp>
-#include <memory>
+#include <iostream>
+#include <fstream>
 #include <string>
-#include <vector>
-#include <array>
 
 #include "constants.h"
 #include "BoxBase.h"
@@ -15,10 +17,13 @@ class/struct:
 	ClassName
 
 public:
-	m_publicVariableName
+	publicVariableName
 
 private:
-	_privateVariableName
+	m_privateVariableName
+
+function variables:
+	function_variable
 
 methods:
 	getPrivateMember()
@@ -52,18 +57,16 @@ methods:
 	     	+--------------+--------------+
 
 */
-class QuadTreeWrapper;
-
+template <typename VecType>
 struct Node {
 private:
 	int m_id;
 
 public:
 	std::string name;
-	glm::dvec3 position;
-	glm::dvec3 velocity;
-	glm::dvec3 force;
-	//std::shared_ptr<std::vector<int>> path;
+	VecType position;
+	VecType velocity;
+	VecType force;
 	double mass;
 	double radius;
 
@@ -74,11 +77,16 @@ public:
 	Node();
 
 	// Creates new node with given properties
-	Node(int id, std::string name, glm::dvec3 position, glm::dvec3 velocity, double const mass, double const radius);
+	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius);
 
 	// Gets node ID
 	int getId();
 	void setId(int id);
 
+	// Various methods
+	void OutputPositionToStream(std::ofstream& file);
 };
 
+#include "Node.tpp"
+
+#endif
