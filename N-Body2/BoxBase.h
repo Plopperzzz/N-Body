@@ -35,7 +35,6 @@ private:
 
     // For 3D, include halfHeight conditionally
     double m_halfHeight;
-    bool m_drawBox;
 
 public:
     // Single constructor with conditional logic using if constexpr (C++17)
@@ -96,10 +95,6 @@ public:
     // Sets the width of Box (x-axis)
     void setWidth(const double& width) {
         m_halfWidth = width / 2.0;
-    }
-
-    void toggleDraw() {
-        m_drawBox = !m_drawBox;
     }
 
     // --- Height (Z-axis) Methods ---
