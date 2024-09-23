@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 	//double theta = 0;
 	//double epsilon = 1e-9;
 
-	//std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
+	std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
 
 	//Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
 	//std::shared_ptr<OctTree> root = std::make_shared<OctTree>(bb, theta, epsilon);

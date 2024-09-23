@@ -2,7 +2,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-constexpr int DIMENSIONS = 3;
+constexpr int DIMENSIONS = 2;
 
 constexpr int PARTITIONS = (DIMENSIONS == 2) ? 4 : (DIMENSIONS == 3) ? 8 : 0;
 

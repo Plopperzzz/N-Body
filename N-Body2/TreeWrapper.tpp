@@ -1,7 +1,6 @@
 #ifndef TREEWRAPPER_TPP
 #define TREEWRAPPER_TPP
 #include "TreeWrapper.h"
-#include <nlohmann/json.hpp>
 #include <Windows.h>
 
 template <typename VecType>
@@ -49,12 +48,7 @@ template <typename VecType>
 void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecType>& other)
 {
 	VecType distance = body.position - other.position;
-
 	double norm = glm::length(distance);
-	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
-
-	DEBUG_LOG("%s--%s:\n\t\tPre-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body.name.c_str(),
-		body.force.x, body.force.y, body.force.z);
 
 	if (norm > m_tree->m_epsilon)
 	{
@@ -66,10 +60,6 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecTyp
 		// to prevent this
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
 	}
-	DEBUG_LOG("%s: Other position: <%.2f, %.2f, %.2f>\n", __func__, other.position.x, other.position.y, other.position.z);
-	DEBUG_LOG("%s (PM) : Other mass: %.2f\n", __func__, other.mass);
-	DEBUG_LOG("%s--%s:\n\t\tPost-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body.name.c_str(),
-		body.force.x, body.force.y, body.force.z);
 }
 
 // Calculates the forces between a body and a point mass, and updates `body`s force
@@ -78,9 +68,7 @@ template <typename VecType>
 void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const VecType position, const double& mass)
 {
 	VecType distance = body.position - position;
-
 	double norm = glm::length(distance);
-	DEBUG_LOG("%s: norm: %.2f\n", __func__, norm);
 
 	if (norm > m_tree->m_epsilon)
 	{
@@ -90,17 +78,13 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const VecType pos
 	{
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
 	}		
-	DEBUG_LOG("%s: Other position: <%.2f, %.2f, %.2f>\n", __func__, position.x, position.y, position.z);
-	DEBUG_LOG("%s (PM) : Other mass: %.2f\n", __func__, mass);
-	DEBUG_LOG("%s--%s:\n\t\tPost-calculation Force: <%.2f, %.2f, %.2f>\n", __func__, body.name.c_str(),
-		body.force.x, body.force.y, body.force.z);
 }
 
 template <typename VecType>
 void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree)
 {
 	bool leaf =tree->isLeaf();
-	bool threshold = (tree->getLength() / (body.position - tree->m_centerOfMass).length()) < tree->m_theta;
+	bool threshold = (tree->getLength() / glm::length(body.position - tree->m_centerOfMass)) < tree->m_theta;
 
 	// Debug: Print out the key variables to check their values
 	DEBUG_LOG("---- %s ----\n", body.name.c_str());
@@ -223,8 +207,7 @@ void TreeWrapper<VecType>::update(const double& dt)
 }
 
 
-using json = nlohmann::json;
-
+#include <nlohmann/json.hpp>
 template <typename VecType>
 void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 	std::ifstream file(file_path);
@@ -234,7 +217,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		return;
 	}
 
-	json body_data = json::parse(file);
+	nlohmann::json body_data = nlohmann::json::parse(file);
 	double max = 0;
 
 	for (const auto& body_json : body_data["bodies"])
