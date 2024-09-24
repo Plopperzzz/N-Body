@@ -75,24 +75,35 @@ class TreeWrapper;
 template <typename VecType>
 class Tree
 {
-template <typename VecType>
+	template <typename VecType>
 	friend class TreeWrapper;
 
 private:
+
+	// Actual data
 	Node<VecType> m_body;
 
+	// Region defining the Tree
 	Box<VecType> m_boundingBox;
+
+	// Children: total number based on glm::dvec2 (4) or glm::dvec3 (8)
 	static constexpr size_t partitions = TreePartitions<VecType>::value;
 	std::array<std::shared_ptr<Tree<VecType>>, partitions> m_children;
 
 	VecType m_centerOfMass;
 
+	// Array of unit directions to aid finding / creating regions
 	static const glm::dvec3 basis[8];
 
 	double m_totalMass;
+
+	// Barnes-Hut threshold
 	static double m_theta;
+
+	// Error threshold
  	static double m_epsilon;
 
+	// Total number of Nodes contained in all the leaves
 	int m_totalDescendants;
 	
 public:

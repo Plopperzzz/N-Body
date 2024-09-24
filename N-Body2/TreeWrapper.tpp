@@ -202,7 +202,6 @@ void TreeWrapper<VecType>::update(const double& dt)
 	// Replace the old tree with the new tree
 	//m_tree = std::move(newTree);
 	m_tree = newTree;
-
 	return;
 }
 
