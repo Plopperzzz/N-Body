@@ -36,11 +36,13 @@ void TreeWrapper<VecType>::insertBody(Node<VecType>& body)
 	// Use the Tree insertion function
 	m_tree->insertBody(body);
 
+
 	// Create a copy
 	Node<VecType> nodeCopy = body;
 	nodeList.push_back(nodeCopy);
 	++m_totalBodies;
 }
+
 
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
@@ -54,6 +56,25 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecTyp
 	{
 		// Should probably add a dampening factor
 		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm);
+	}
+	else
+	{
+		// to prevent this
+		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
+	}
+}
+
+template<typename VecType>
+void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, const Node<VecType>& other)
+{
+	VecType distance = body.position - other.position;
+	double norm = glm::length(distance);
+
+	if (norm > m_tree->m_epsilon)
+	{
+		// Should probably add a dampening factor
+		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm);
+		other.force += -body.force;
 	}
 	else
 	{
@@ -77,13 +98,13 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const VecType pos
 	else
 	{
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
-	}		
+	}
 }
 
 template <typename VecType>
 void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree)
 {
-	bool leaf =tree->isLeaf();
+	bool leaf = tree->isLeaf();
 	bool threshold = (tree->getLength() / glm::length(body.position - tree->m_centerOfMass)) < tree->m_theta;
 
 	// Debug: Print out the key variables to check their values
@@ -117,8 +138,8 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 		else {
 
 			int i = 0;
-			for(auto& childTree: tree->m_children){
-				if(childTree->m_totalDescendants > 0)
+			for (auto& childTree : tree->m_children) {
+				if (childTree->m_totalDescendants > 0)
 					updateForce(body, childTree);
 				++i;
 			}
@@ -205,7 +226,6 @@ void TreeWrapper<VecType>::update(const double& dt)
 	return;
 }
 
-
 #include <nlohmann/json.hpp>
 template <typename VecType>
 void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
@@ -230,13 +250,13 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		{
 			current_distance = glm::length(VecType(body_json["position"][0], body_json["position"][1]));
 		}
-		if (current_distance > max) 
+		if (current_distance > max)
 		{
 			max = current_distance;
 		}
 	}
 
-	Box<VecType> new_bounding_box(m_tree->m_boundingBox.center, 2*max, 2*max, 2*max);
+	Box<VecType> new_bounding_box(m_tree->m_boundingBox.center, 2 * max, 2 * max, 2 * max);
 
 	std::shared_ptr<Tree<VecType>> new_tree = std::make_shared<Tree<VecType>>(new_bounding_box);
 	m_tree = new_tree;

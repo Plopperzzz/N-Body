@@ -84,12 +84,12 @@ void Tree<VecType>::setEpsilon(double& epsilon) {
 }
 
 template <typename VecType>
-int Tree<VecType>::getTotalDescendats() {
+int Tree<VecType>::getTotalDescendants() {
 	return m_totalDescendants;
 }
 
 template <typename VecType>
-glm::dvec3 Tree<VecType>::getBoundinBoxColor() {
+glm::dvec3 Tree<VecType>::getBoundingBoxColor() {
 	return m_boundingBox.color;
 }
 

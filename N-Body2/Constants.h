@@ -15,6 +15,7 @@ constexpr double C = 2.99792458e8;
 constexpr double M_PI =   3.14159265358979323;
 constexpr double SQRT_2 = 1.41421356237309515;
 constexpr double SQRT_3 = 1.73205080756887719;
+constexpr double LOG10_2 = 0.3010299956639812;
 
 
 #endif // CONSTANTS_H

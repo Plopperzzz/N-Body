@@ -10,6 +10,7 @@
 #include "constants.h"
 #include "BoxBase.h"
 #include "Node.h"
+#include "Utils.h"
 
 /*********************
 
@@ -135,9 +136,9 @@ public:
 	double& getTheta();
 	double& getEpsilon();
 
-	int getTotalDescendats();
+	int getTotalDescendants();
 
-	glm::dvec3 getBoundinBoxColor();
+	glm::dvec3 getBoundingBoxColor();
 
 	// Setters
 	void setTheta(double& newTheta);

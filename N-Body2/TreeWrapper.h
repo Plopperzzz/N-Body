@@ -28,6 +28,7 @@ public:
 	void insertBody(Node<VecType>& body);
 
 	void calculateForce(Node<VecType>& body, const Node<VecType>& other);
+	void calculateForceBi(Node<VecType>& body, const Node<VecType>& other);
 	void calculateForce(Node<VecType>& body, const VecType position, const double& mass);
 
 	void updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree);
@@ -41,3 +42,4 @@ using TreeWrapper2D = TreeWrapper<glm::dvec2>;
 
 #include "TreeWrapper.tpp"
 #endif
+

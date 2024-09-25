@@ -10,6 +10,8 @@
 #include <list>
 #include <chrono>
 #include <functional>
+#include <cmath>
+#include <stdint.h>
 //#define _DEBUG
 
 
@@ -48,13 +50,13 @@ public:
 		return elapsed;
 	}
 
-	static void printPrograssBar(int i, int limit, int barWidth=100, const std::string& process = "");
+	static void printProgressBar(int i, int limit, int barWidth = 100, const std::string& process = "");
 	static void setCursorPosition(int x, int y);
 	static void getConsoleSize(int& width, int& height);
 	static void signalHandler(int signum);
 
-	static void gpScript(std::string script_name, std::string gif_name,std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
-	static void gpScript3d(std::string script_name, std::string gif_name,std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
+	static void gpScript(std::string script_name, std::string gif_name, std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
+	static void gpScript3d(std::string script_name, std::string gif_name, std::string dataName, double size, std::vector<std::string> body_names, std::string path = "");
 
 	// Variadic template to allow for multiple arguments like printf
 	template<typename... Args>
@@ -64,6 +66,12 @@ public:
 		ss << FormatString(format, args...) << "\n";  // Format the message
 		OutputDebugStringA(ss.str().c_str());  // Output to Visual Studio's debug output
 #endif
+	}
+
+
+	// Function using std::log10 to compute base-10 exponent difference
+	static inline uint32_t getBase10ExponentDifferenceLog10(double d1, double d2) {
+		return static_cast<uint32_t>(std::abs(std::log10(d1) - std::log10(d2)));
 	}
 
 private:

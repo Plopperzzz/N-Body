@@ -22,7 +22,6 @@ int main(int argc, char** argv)
 	//double theta = 0;
 	//double epsilon = 1e-9;
 
-	std::cout << "Current working directory: " << std::filesystem::current_path() << std::endl;
 
 	//Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
 	//std::shared_ptr<OctTree> root = std::make_shared<OctTree>(bb, theta, epsilon);
@@ -143,7 +142,7 @@ int main(int argc, char** argv)
 				Utils::outputPositions(TestTree.nodeList, i * dt, orbitFile);
 
 			if (i % divFactor == 0 || i == num)
-				Utils::printPrograssBar(i, num, 80, "time - " + std::to_string((total_time - previous_time).count()));
+				Utils::printProgressBar(i, num, 80, "time - " + std::to_string((total_time - previous_time).count()));
 		}
 		std::cout << std::endl;
 		std::cout << "Update -- Average update time for - " << TestTree.getTotalBodies() << " - bodies: " << std::setprecision(15) << total_time.count() / num << std::endl;

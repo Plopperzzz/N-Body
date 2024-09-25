@@ -46,7 +46,7 @@ void Utils::setClipboardText(const std::string& text) {
 	GlobalFree(hGlobal);
 }
 
-void Utils::printPrograssBar(int i, int limit, int barWidth, const std::string& process) {
+void Utils::printProgressBar(int i, int limit, int barWidth, const std::string& process) {
 
 	float progress = float(i + 1) / limit; // Calculate progress as a fraction
 	int pos = barWidth * progress;
