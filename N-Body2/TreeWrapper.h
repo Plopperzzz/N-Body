@@ -35,6 +35,7 @@ public:
 	void update(const double& dt);
 
 	void loadBodies(const std::string& filePath);
+private:
 };
 
 using TreeWrapper3D = TreeWrapper<glm::dvec3>;

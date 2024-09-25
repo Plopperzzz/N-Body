@@ -50,10 +50,10 @@ void Utils::printProgressBar(int i, int limit, int barWidth, const std::string& 
 
 	float progress = float(i + 1) / limit; // Calculate progress as a fraction
 	int pos = barWidth * progress;
-	int init_x, init_y;
+	//int init_x, init_y;
 	int width, height;
-	COORD cursorPosition;
-	COORD currentPosition;
+	//COORD cursorPosition;
+	//COORD currentPosition;
 	
 	// Get the console handle
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);

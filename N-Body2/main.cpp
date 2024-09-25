@@ -187,7 +187,7 @@ int main(int argc, char** argv)
 				Utils::outputPositions(TestTree2d.nodeList, i * dt, orbitFile);
 
 			if (i % divFactor == 0 || i == num)
-				Utils::printPrograssBar(i, num, 80, "time - " + std::to_string((total_time - previous_time).count()));
+				Utils::printProgressBar(i, num, 80, "time - " + std::to_string((total_time - previous_time).count()));
 		}
 		std::cout << std::endl;
 		std::cout << "Update -- Average update time for - " << TestTree2d.getTotalBodies() << " - bodies: " << std::setprecision(15) << total_time.count() / num << std::endl;

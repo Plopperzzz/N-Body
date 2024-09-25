@@ -54,7 +54,6 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecTyp
 
 	if (norm > m_tree->m_epsilon)
 	{
-		// Should probably add a dampening factor
 		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm);
 	}
 	else
@@ -69,11 +68,13 @@ void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, const Node<VecT
 {
 	VecType distance = body.position - other.position;
 	double norm = glm::length(distance);
+	double massLookup;
+	int index = body.getId() * m_totalBodies + other.getId();
 
 	if (norm > m_tree->m_epsilon)
 	{
-		// Should probably add a dampening factor
-		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm);
+		// Create a lookup table to reduce multiplications
+		body.force += -G*body.mass*other.mass * distance / (norm * norm * norm);
 		other.force += -body.force;
 	}
 	else
@@ -132,7 +133,6 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 		if (threshold && tree->m_totalDescendants) {
 
 			DEBUG_LOG("*********************************************************************************\n");
-
 			calculateForce(body, tree->m_centerOfMass, tree->m_totalMass);
 		}
 		else {
@@ -238,9 +238,11 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 
 	nlohmann::json body_data = nlohmann::json::parse(file);
 	double max = 0;
+	int i = 0;
 
 	for (const auto& body_json : body_data["bodies"])
 	{
+		++i;
 		double current_distance;
 		if constexpr (VecDimensions<VecType>::value == 3)
 		{
@@ -294,6 +296,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 
 	return;
 }
+
 
 #endif
 

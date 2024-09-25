@@ -59,7 +59,9 @@
     <ClCompile Include="BoxBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Node.tpp" />
+    <ClCompile Include="Node.tpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Earth_Moon_Sun.json">

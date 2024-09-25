@@ -28,7 +28,7 @@ Node<VecType>::Node(int id, std::string name, VecType position, VecType velocity
 {}
 
 template <typename VecType>
-int Node<VecType>::getId() {
+int Node<VecType>::getId() const{
 	return m_id;
 }
 

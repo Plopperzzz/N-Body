@@ -80,7 +80,7 @@ public:
 	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius);
 
 	// Gets node ID
-	int getId();
+	int getId() const;
 	void setId(int id);
 
 	// Various methods
