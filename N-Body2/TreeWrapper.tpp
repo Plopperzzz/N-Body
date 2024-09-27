@@ -117,44 +117,51 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 	DEBUG_LOG("\tTheta: %.2f\n", tree->m_theta);
 	DEBUG_LOG("\tThreshold: %d\n", threshold);
 
-	// Check if it's a leaf, empty region, or if it is the body we are already updating
-	if (leaf && (tree->m_body.getId() == -1 || tree->m_body.getId() == body.getId()))
+	// Check if it's a leaf and has no bodies
+	if (leaf && (tree->m_currentBodyCount == 0))
 	{
 		DEBUG_LOG("%s: Leaf, no valid body or self-body, skipping force update.\n", __func__);
-
 		return;
 	}
 
 	// Check if it is a branch
-	else if (!leaf) {
+	else if (!leaf)
+	{
 		DEBUG_LOG("%s: Branch detected.\n", __func__);
 
-
-		if (threshold && tree->m_totalDescendants) {
-
+		if (threshold && tree->m_totalDescendants > 0)
+		{
 			DEBUG_LOG("*********************************************************************************\n");
 			calculateForce(body, tree->m_centerOfMass, tree->m_totalMass);
 		}
-		else {
-
-			int i = 0;
-			for (auto& childTree : tree->m_children) {
-				if (childTree->m_totalDescendants > 0)
+		else
+		{
+			for (const auto& childTree : tree->m_children)
+			{
+				if (childTree && childTree->m_totalDescendants > 0)
+				{
 					updateForce(body, childTree);
-				++i;
+				}
 			}
 		}
 	}
 
-	// not a branch, leaf, or invalid node (nullptr or `body`)
-	else {
-		DEBUG_LOG("%s: Leaf or invalid node, calculating force directly.\n", __func__);
+	// It is a leaf and has one or more bodies
+	else
+	{
+		DEBUG_LOG("%s: Leaf with bodies, calculating force directly for each body.\n", __func__);
 
-		calculateForce(body, tree->m_body);
+		for (const auto& otherBody : tree->m_body)
+		{
+			// Skip force calculation if the otherBody is the same as body
+			if (otherBody.getId() == body.getId()) // Assuming Node has an 'id' member
+				continue;
+
+			calculateForce(body, otherBody);
+		}
 	}
 
 	return;
-
 }
 
 template <typename VecType>

@@ -82,7 +82,7 @@ class Tree
 private:
 
 	// Actual data
-	Node<VecType> m_body;
+	std::vector<Node<VecType>> m_body;
 
 	// Region defining the Tree
 	Box<VecType> m_boundingBox;
@@ -106,6 +106,8 @@ private:
 
 	// Total number of Nodes contained in all the leaves
 	int m_totalDescendants;
+	int m_maxBodyCount;
+	int m_currentBodyCount;
 	
 public:
 	// Members
@@ -135,6 +137,7 @@ public:
 	double getMass();
 	double& getTheta();
 	double& getEpsilon();
+	int getCurrentBodyCount() const;
 
 	int getTotalDescendants();
 
@@ -144,6 +147,7 @@ public:
 	void setTheta(double& newTheta);
 	void setEpsilon(double& newEpsilon);
 	void setBoundingBoxColor(const glm::dvec3& color);
+	void setMaxBodyCount(size_t newMax);
 
 	// bool
 	bool isLeaf();

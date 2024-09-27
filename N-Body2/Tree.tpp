@@ -21,21 +21,26 @@ template <typename VecType>
 double Tree<VecType>::m_epsilon = 1e-3;
 
 template <typename VecType>
-Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body)://, std::weak_ptr<OctTree> parent) :
+Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body) ://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(VecType(0)),
+	m_body(),
 	m_boundingBox(boundingBox),
-	m_body(body),
 	m_totalDescendants(0),
-	m_totalMass(0)
+	m_totalMass(0),
+	m_maxBodyCount(5),
+	m_currentBodyCount(1)
 {
+	m_body.push_back(body);
 }
 
 template <typename VecType>
-Tree<VecType>::Tree(Box<VecType> boundingBox)://, std::weak_ptr<OctTree> parent) :
+Tree<VecType>::Tree(Box<VecType> boundingBox) ://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
-	m_centerOfMass(VecType(0))
+	m_centerOfMass(VecType(0)),
+	m_maxBodyCount(5),
+	m_currentBodyCount(0)
 {
 }
 
@@ -44,7 +49,9 @@ Tree<VecType>::Tree(Box<VecType> boundingBox, double& theta, double& epsilon) :
 	m_boundingBox(boundingBox),
 	m_centerOfMass(VecType(0)),
 	m_totalMass(0),
-	m_totalDescendants(0)
+	m_totalDescendants(0),
+	m_maxBodyCount(5),
+	m_currentBodyCount(0)
 {
 }
 
@@ -78,6 +85,12 @@ double& Tree<VecType>::getEpsilon() {
 	return m_epsilon;
 }
 
+template<typename VecType>
+int Tree<VecType>::getCurrentBodyCount() const
+{
+	return m_currentBodyCount;
+}
+
 template <typename VecType>
 void Tree<VecType>::setEpsilon(double& epsilon) {
 	m_epsilon = epsilon;
@@ -97,6 +110,12 @@ template <typename VecType>
 void Tree<VecType>::setBoundingBoxColor(const glm::dvec3& color)
 {
 	m_boundingBox.color = color;
+}
+
+template<typename VecType>
+void Tree<VecType>::setMaxBodyCount(size_t newMax)
+{
+	m_maxBodyCount = newMax;
 }
 
 template <typename VecType>
@@ -176,17 +195,18 @@ void Tree<VecType>::insertBody(Node<VecType>& body)
 	{
 		return;
 	}
-	Tree<VecType>::Region octant, currentInhabitantNewQuadrant;
+	Tree<VecType>::Region region, currentInhabitantNewRegion;
 
 	++m_totalDescendants;
 	updateCenterOfMass(body);
 
-	octant = findRegion(body.position);
+	region = findRegion(body.position);
 
-	if (m_body.getId() == -1 && isLeaf()) {
+	if (m_currentBodyCount < m_maxBodyCount && isLeaf()) {
 
 		// it is a leaf, and empty, so we can insert the node here
-		m_body = body;
+		m_body.push_back(body);
+		m_currentBodyCount++;
 		//body->path->push_back(octant);
 		return;
 
@@ -195,27 +215,31 @@ void Tree<VecType>::insertBody(Node<VecType>& body)
 
 	//body->path->push_back(octant);
 
-	if (m_body.getId() == -1) {
+	if (m_currentBodyCount == 0) {
 
 		// it is not a leaf, so we need to recurse.
-		m_children[octant]->insertBody(body);
+		m_children[region]->insertBody(body);
 
 	}
 
 	else {
-		// it is a leaf (it contains one body and no children), so
+		// it is a leaf (it contains the maximum number of bodies and no children), so
 		// subdivide and we need to re-insert the body that previously
 		// populated the current quad
-
-		Node<VecType> currentInhabitant = m_body;
-		m_body = Node<VecType>();
-
-		currentInhabitantNewQuadrant = findRegion(currentInhabitant.position);
-
 		subdivide();
 
-		m_children[currentInhabitantNewQuadrant]->insertBody(currentInhabitant);
-		m_children[octant]->insertBody(body);
+		for (auto currentBody : m_body)
+		{
+
+			Node<VecType> currentInhabitant = currentBody;
+
+			currentInhabitantNewRegion = findRegion(currentInhabitant.position);
+
+			m_children[currentInhabitantNewRegion]->insertBody(currentInhabitant);
+		}
+		m_body.resize(0);
+		m_currentBodyCount = 0;
+		m_children[region]->insertBody(body);
 	}
 
 	return;
