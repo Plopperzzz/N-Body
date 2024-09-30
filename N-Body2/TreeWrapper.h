@@ -25,10 +25,11 @@ public:
 
 	Node<VecType>& operator[](std::size_t index);
 
+	// 
 	void insertBody(Node<VecType>& body);
 
-	void calculateForce(Node<VecType>& body, const Node<VecType>& other);
-	void calculateForceBi(Node<VecType>& body, const Node<VecType>& other);
+	void calculateForce(Node<VecType>& body, Node<VecType>& other);
+	void calculateForceBi(Node<VecType>& body, Node<VecType>& other);
 	void calculateForce(Node<VecType>& body, const VecType position, const double& mass);
 
 	void updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree);

@@ -3,6 +3,8 @@ import random
 import argparse
 import math
 
+G = 6.67430e-11  # Gravitational constant
+
 def generate_random_bodies(num_bodies, mass_range, radius_range, position_range, velocity_range):
     bodies = []
     
@@ -28,7 +30,7 @@ def generate_random_bodies(num_bodies, mass_range, radius_range, position_range,
     
     return bodies
 
-def generate_circular_bodies(num_bodies, mass_range, radius_range, circle_radius, circle_center, circle_plane):
+def generate_circular_bodies(num_bodies, mass_range, radius_range, circle_radius, circle_center, circle_plane, central_mass=1e30):
     bodies = []
     
     for i in range(num_bodies):
@@ -37,30 +39,45 @@ def generate_circular_bodies(num_bodies, mass_range, radius_range, circle_radius
             x = circle_center[0] + circle_radius * math.cos(angle)
             y = circle_center[1] + circle_radius * math.sin(angle)
             z = circle_center[2]
+            r = math.sqrt((x - circle_center[0])**2 + (y - circle_center[1])**2)  # Radial distance
         elif circle_plane == 'xz':
             x = circle_center[0] + circle_radius * math.cos(angle)
             y = circle_center[1]
             z = circle_center[2] + circle_radius * math.sin(angle)
+            r = math.sqrt((x - circle_center[0])**2 + (z - circle_center[2])**2)  # Radial distance
         elif circle_plane == 'yz':
             x = circle_center[0]
             y = circle_center[1] + circle_radius * math.cos(angle)
             z = circle_center[2] + circle_radius * math.sin(angle)
+            r = math.sqrt((y - circle_center[1])**2 + (z - circle_center[2])**2)  # Radial distance
         else:
             raise ValueError("Invalid circle_plane. Choose from 'xy', 'xz', 'yz'.")
         
-        # For velocity, you might want to set it tangentially for circular motion
-        # Here, we'll assign random velocities unless specified otherwise
+        # Calculate velocity for elliptical orbit
+        velocity_magnitude = math.sqrt(G * central_mass / r)  # Circular velocity magnitude
+        velocity_magnitude *= random.uniform(0.9, 1.1)  # Introduce randomness to make it elliptical
+
+        # Determine tangential velocity
+        if circle_plane == 'xy':
+            vx = -velocity_magnitude * math.sin(angle)
+            vy = velocity_magnitude * math.cos(angle)
+            vz = 0.0
+        elif circle_plane == 'xz':
+            vx = -velocity_magnitude * math.sin(angle)
+            vy = 0.0
+            vz = velocity_magnitude * math.cos(angle)
+        elif circle_plane == 'yz':
+            vx = 0.0
+            vy = -velocity_magnitude * math.sin(angle)
+            vz = velocity_magnitude * math.cos(angle)
+        
         body = {
             "id": i,
             "name": f"Body_{i}",
             "mass": random.uniform(*mass_range),
             "radius": random.uniform(*radius_range),
             "position": [x, y, z],
-            "velocity": [
-                random.uniform(-1e4, 1e4),  # You might want to adjust this for realistic circular motion
-                random.uniform(-1e4, 1e4),
-                random.uniform(-1e4, 1e4)
-            ],
+            "velocity": [vx, vy, vz],
             "force": [0.0, 0.0, 0.0]  # Assuming force starts at zero
         }
         bodies.append(body)

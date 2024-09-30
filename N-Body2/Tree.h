@@ -108,6 +108,8 @@ private:
 	int m_totalDescendants;
 	int m_maxBodyCount;
 	int m_currentBodyCount;
+
+	bool m_forceComputed = false;
 	
 public:
 	// Members

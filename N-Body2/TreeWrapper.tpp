@@ -47,7 +47,7 @@ void TreeWrapper<VecType>::insertBody(Node<VecType>& body)
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
 template <typename VecType>
-void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecType>& other)
+void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, Node<VecType>& other)
 {
 	VecType distance = body.position - other.position;
 	double norm = glm::length(distance);
@@ -64,12 +64,10 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const Node<VecTyp
 }
 
 template<typename VecType>
-void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, const Node<VecType>& other)
+void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, Node<VecType>& other)
 {
 	VecType distance = body.position - other.position;
 	double norm = glm::length(distance);
-	double massLookup;
-	int index = body.getId() * m_totalBodies + other.getId();
 
 	if (norm > m_tree->m_epsilon)
 	{
@@ -151,13 +149,25 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 	{
 		DEBUG_LOG("%s: Leaf with bodies, calculating force directly for each body.\n", __func__);
 
-		for (const auto& otherBody : tree->m_body)
+		for (auto& otherBody : tree->m_body)
 		{
 			// Skip force calculation if the otherBody is the same as body
-			if (otherBody.getId() == body.getId()) // Assuming Node has an 'id' member
+			if (otherBody.getId() == body.getId())
 				continue;
 
 			calculateForce(body, otherBody);
+		}
+		if (!tree->m_forceComputed)
+		{
+			for (int i = 0; i < tree->m_currentBodyCount; ++i)
+			{
+				if (tree->m_body[i].getId() == body.getId())
+					continue;
+				for (int j = i + 1; j < tree->m_currentBodyCount; ++j) {
+					calculateForceBi(tree->m_body[i], tree->m_body[j]);
+				}
+			}
+			tree->m_forceComputed = true;
 		}
 	}
 
