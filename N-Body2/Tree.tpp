@@ -91,6 +91,15 @@ int Tree<VecType>::getCurrentBodyCount() const
 	return m_currentBodyCount;
 }
 
+template<typename VecType>
+int Tree<VecType>::getNodeIndex(Node<VecType>& body) const
+{
+	int i = 0;
+	if(m_currentBodyCount)
+		for (i; body.getId() != m_body[i].getId(); ++i);
+	return i;
+}
+
 template <typename VecType>
 void Tree<VecType>::setEpsilon(double& epsilon) {
 	m_epsilon = epsilon;

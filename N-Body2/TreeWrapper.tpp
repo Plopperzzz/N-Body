@@ -63,25 +63,6 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, Node<VecType>& ot
 	}
 }
 
-template<typename VecType>
-void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, Node<VecType>& other)
-{
-	VecType distance = body.position - other.position;
-	double norm = glm::length(distance);
-
-	if (norm > m_tree->m_epsilon)
-	{
-		// Create a lookup table to reduce multiplications
-		body.force += -G*body.mass*other.mass * distance / (norm * norm * norm);
-		other.force += -body.force;
-	}
-	else
-	{
-		// to prevent this
-		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
-	}
-}
-
 // Calculates the forces between a body and a point mass, and updates `body`s force
 // Used in case we are calculating the force between a Node and a center of mass
 template <typename VecType>
@@ -92,10 +73,31 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, const VecType pos
 
 	if (norm > m_tree->m_epsilon)
 	{
-		body.force += -G * body.mass * mass * distance / (norm * norm * norm);
+		body.force += -G * body.mass * mass * distance / (norm * norm * norm + m_tree->m_epsilon);
 	}
 	else
 	{
+		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
+	}
+}
+
+template<typename VecType>
+void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, Node<VecType>& other)
+{
+	VecType distance = body.position - other.position;
+	double norm = glm::length(distance);
+
+	if (norm > m_tree->m_epsilon)
+	{
+		VecType F = -G * body.mass * other.mass * distance / (norm * norm * norm);
+
+		// Update forces on both bodies
+		body.force += F;       // Force on body due to other
+		other.force -= F;      // Newton's third law
+	}
+	else
+	{
+		// to prevent this
 		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
 	}
 }
@@ -156,18 +158,6 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 				continue;
 
 			calculateForce(body, otherBody);
-		}
-		if (!tree->m_forceComputed)
-		{
-			for (int i = 0; i < tree->m_currentBodyCount; ++i)
-			{
-				if (tree->m_body[i].getId() == body.getId())
-					continue;
-				for (int j = i + 1; j < tree->m_currentBodyCount; ++j) {
-					calculateForceBi(tree->m_body[i], tree->m_body[j]);
-				}
-			}
-			tree->m_forceComputed = true;
 		}
 	}
 

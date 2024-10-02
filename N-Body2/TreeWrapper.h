@@ -29,8 +29,8 @@ public:
 	void insertBody(Node<VecType>& body);
 
 	void calculateForce(Node<VecType>& body, Node<VecType>& other);
-	void calculateForceBi(Node<VecType>& body, Node<VecType>& other);
 	void calculateForce(Node<VecType>& body, const VecType position, const double& mass);
+	void calculateForceBi(Node<VecType>& body, Node<VecType>& other);
 
 	void updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree);
 	void update(const double& dt);

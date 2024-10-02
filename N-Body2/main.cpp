@@ -16,23 +16,6 @@
 
 int main(int argc, char** argv)
 {
-	//std::string path = "../../N-Body2/Data/Earth-Moon.json";
-	//double dt = 100;
-	//double rootLength = 2e9;
-	//double theta = 0;
-	//double epsilon = 1e-9;
-
-
-	//Box bb(glm::dvec3(0.0, 0.0, 0.0), rootLength / 2, rootLength / 2, rootLength / 2);
-	//std::shared_ptr<OctTree> root = std::make_shared<OctTree>(bb, theta, epsilon);
-	//TreeWrapper Tree(root);
-
-	//Tree.loadBodies(path);
-	//double nt = 0;
-	//root->setTheta(nt);
-
-	//Tree.update(dt);
-
 #ifndef cxx_arguments
 	cxxopts::Options options("N-Body", "Simple Barnes-Hut n-body simulation.");
 
@@ -55,7 +38,6 @@ int main(int argc, char** argv)
 	for (int i = 1; i < argc; ++i) {
 		gif_title << argv[i] << "__";
 	}
-	//std::cout << gif_title.str() << std::endl;
 
 	std::cout << std::endl;
 
@@ -92,6 +74,7 @@ int main(int argc, char** argv)
 	std::string script_path = result["script"].as<std::string>();
 	std::string gnuCommand = "wsl gnuplot " + script_path;
 #endif
+
 
 	std::ofstream orbitFile(data_name, std::ios::out | std::ios::trunc);
 	orbitFile.close();
@@ -208,3 +191,6 @@ int main(int argc, char** argv)
 		}
 	}
 }
+
+
+

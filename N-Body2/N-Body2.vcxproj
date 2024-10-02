@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="BoxBase.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Box.h" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="BoxBase.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.tpp" />
     <ClCompile Include="Tree.tpp" />
     <ClCompile Include="Box.cpp" />

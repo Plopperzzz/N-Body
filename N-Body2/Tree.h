@@ -140,6 +140,7 @@ public:
 	double& getTheta();
 	double& getEpsilon();
 	int getCurrentBodyCount() const;
+	int getNodeIndex(Node<VecType>& body) const;
 
 	int getTotalDescendants();
 
