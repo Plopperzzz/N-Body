@@ -1,7 +1,10 @@
 #ifndef TREEWRAPPER_TPP
 #define TREEWRAPPER_TPP
-#include "TreeWrapper.h"
 #include <Windows.h>
+#include <execution>
+#include <mutex>
+
+#include "TreeWrapper.h"
 
 template <typename VecType>
 TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree<VecType>> root) :
@@ -164,6 +167,7 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 	return;
 }
 
+
 template <typename VecType>
 void TreeWrapper<VecType>::update(const double& dt)
 {
@@ -173,24 +177,31 @@ void TreeWrapper<VecType>::update(const double& dt)
 
 	bool expand = false;
 
-	for (Node<VecType>& body : nodeList) {
-		// This should never happen, but hey.
+	// Parallelize only the force update
+	std::for_each(std::execution::par, nodeList.begin(), nodeList.end(), [&](Node<VecType>& body) {
+
 		if (body.getId() == -1) {
 			std::cout << "found null body in update loop\n";
 		}
 
-		/** Velocity verlet integration **/
+		// Velocity verlet integration
 
 		// Calculate acceleration from force and get the new position
 		VecType acc = body.force / body.mass;
 		VecType new_pos = body.position + body.velocity * dt + acc * (dt * dt * 0.5);
 
+		// If body has gone too far, delete it
+		if (glm::length(m_tree->m_centerOfMass - new_pos) > 3*max)
+		{
+			return;
+		}
+
 		// Reset the force
 		body.force = VecType(0);
 
+		// This is now parallelized, make sure this function is thread-safe
 		updateForce(body, m_tree);
 
-		// Getting ready to create a new body to insert into newTree
 		VecType new_force = body.force;
 		VecType new_accel = new_force / body.mass;
 		VecType new_vel = body.velocity + (acc + new_accel) * (dt * 0.5);
@@ -198,40 +209,103 @@ void TreeWrapper<VecType>::update(const double& dt)
 		body.position = new_pos;
 		body.velocity = new_vel;
 
-		// Keep track of the furthest body from the center of the tree to determine if it needs to grow
-		// There may be a better, less expensive way of doing this, but hopefully iterating through nodelist again
-
-		// and rebuilding at most once per update outweighs potentially rebuilding multiple times per update and not
-		// iterating through the list a second time
+		// Determine if tree needs to expand
 		max_test = glm::length(new_pos);
 		if (max_test > max) {
-			//std::cout << "max_test: " << max_test << std::endl;
 			max = max_test;
 			expand = true;
 		}
-	}
+		});
 
-	if (expand)
-	{
+	if (expand) {
 		max *= 2;
 	}
 
-	// Create new tree so we dont move bodies before all forces are calcualted
+	// Now handle the tree insertion after parallel work is done
 	Box<VecType> newBoundingBox = Box<VecType>(m_tree->m_boundingBox.center, max, max, max);
 	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox);
 
-	// Create new wrapper to utilize its insertion that will expand the member tree if needed
-
+	// Insert bodies sequentially into the new tree
 	for (Node<VecType>& body : nodeList) {
 		Node<VecType> bodyCopy = body;
 		newTree->insertBody(bodyCopy);
 	}
 
-	// Replace the old tree with the new tree
-	//m_tree = std::move(newTree);
+	// Replace the old tree with the new one
 	m_tree = newTree;
-	return;
 }
+
+//template <typename VecType>
+//void TreeWrapper<VecType>::update(const double& dt)
+//{
+//	auto total_time = std::chrono::duration<double>::zero();
+//	double max = m_tree->m_boundingBox.getHalfLength();
+//	double max_test;
+//
+//	std::mutex treeMutex;
+//
+//	bool expand = false;
+//
+//	for (Node<VecType>& body : nodeList) {
+//
+//		// This should never happen, but hey.
+//		if (body.getId() == -1) {
+//			std::cout << "found null body in update loop\n";
+//		}
+//
+//		/** Velocity verlet integration **/
+//
+//		// Calculate acceleration from force and get the new position
+//		VecType acc = body.force / body.mass;
+//		VecType new_pos = body.position + body.velocity * dt + acc * (dt * dt * 0.5);
+//
+//		// Reset the force
+//		body.force = VecType(0);
+//
+//		updateForce(body, m_tree);
+//
+//		// Getting ready to create a new body to insert into newTree
+//		VecType new_force = body.force;
+//		VecType new_accel = new_force / body.mass;
+//		VecType new_vel = body.velocity + (acc + new_accel) * (dt * 0.5);
+//
+//		body.position = new_pos;
+//		body.velocity = new_vel;
+//
+//		// Keep track of the furthest body from the center of the tree to determine if it needs to grow
+//		// There may be a better, less expensive way of doing this, but hopefully iterating through nodelist again
+//
+//		// and rebuilding at most once per update outweighs potentially rebuilding multiple times per update and not
+//		// iterating through the list a second time
+//		max_test = glm::length(new_pos);
+//		if (max_test > max) {
+//			//std::cout << "max_test: " << max_test << std::endl;
+//			max = max_test;
+//			expand = true;
+//		}
+//	}
+//
+//	if (expand)
+//	{
+//		max *= 2;
+//	}
+//
+//	// Create new tree so we dont move bodies before all forces are calcualted
+//	Box<VecType> newBoundingBox = Box<VecType>(m_tree->m_boundingBox.center, max, max, max);
+//	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox);
+//
+//	// Create new wrapper to utilize its insertion that will expand the member tree if needed
+//
+//	for (Node<VecType>& body : nodeList) {
+//		Node<VecType> bodyCopy = body;
+//		newTree->insertBody(bodyCopy);
+//	}
+//
+//	// Replace the old tree with the new tree
+//	//m_tree = std::move(newTree);
+//	m_tree = newTree;
+//	return;
+//}
 
 #include <nlohmann/json.hpp>
 template <typename VecType>
