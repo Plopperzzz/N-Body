@@ -7,11 +7,18 @@ void main()
 {
 	// Calculate the distance from the center of the point
     vec2 coord = gl_PointCoord - vec2(0.5);
-    float dist = length(coord);
+    float dist = dot(coord, coord);
+
+    float radius = 0.005;
 
     // Create a radial gradient to make it circular and add blur
-    float alpha = smoothstep(5, 0.45, dist); // Adjust values for blur effect
+    float alpha = smoothstep(radius * radius, radius + 0.01, dist); // Adjust values for blur effect
+
+    if(dist > radius + 0.05)
+    {
+        discard;
+    } 
 
     // Set color and transparency
-    FragColor = color; // White color with alpha channel
+    FragColor = vec4(color.rgb, 1.0 - alpha);
 };

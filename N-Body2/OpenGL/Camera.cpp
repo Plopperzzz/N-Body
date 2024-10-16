@@ -90,26 +90,6 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	//// Adjust zoom speed
-	//float zoomSpeed = 1.1f;
-
-	//if (yoffset > 0) {
-	//	// Zoom in
-	//	orthoLeft /= zoomSpeed;
-	//	orthoRight /= zoomSpeed;
-	//	orthoBottom /= zoomSpeed;
-	//	orthoTop /= zoomSpeed;
-	//}
-	//else if (yoffset < 0) {
-	//	// Zoom out
-	//	orthoLeft *= zoomSpeed;
-	//	orthoRight *= zoomSpeed;
-	//	orthoBottom *= zoomSpeed;
-	//	orthoTop *= zoomSpeed;
-	//}
-
-	//// Update orthographic projection settings
-	//SetOrthographic(orthoLeft, orthoRight, orthoBottom, orthoTop, nearPlane, farPlane);
 	// Get cursor position
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);

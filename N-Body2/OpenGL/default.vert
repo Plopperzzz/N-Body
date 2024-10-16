@@ -11,7 +11,7 @@ uniform float radius;
 void main()
 {
 	gl_Position = camMatrix * vec4(aPos, 0.0, 1.0);
-	gl_PointSize = 7.5 * aRad / radius;
+	gl_PointSize = 60 * aRad / radius;
 
 	color = aColor;
 };

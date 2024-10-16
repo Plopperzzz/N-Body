@@ -64,6 +64,8 @@ void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsi
 //		- In-place tree updates
 //		- Dynamic time stepping (global or per Node)
 
+int zoom = 0;
+
 int main(int argc, char** argv)
 {
 #ifndef cxx_arguments
@@ -138,9 +140,11 @@ int main(int argc, char** argv)
 	GLFWwindow* window = (GLFWwindow*)GFXInit(width, height, 3, 3, "N-Body Simulation");
 
 	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPointSize(6.0f);
 	// Compile vertex shader
-	Shader shader("B:/repos/N-Body/N-Body2/OpenGL/default.vert", "B:/repos/N-Body/N-Body2/OpenGL/default.frag");
+	Shader shader("../../N-Body2/OpenGL/default.vert", "../../N-Body2/OpenGL/default.frag");
 
 	/*************************************************************/
 	/************************** SETUP ****************************/
