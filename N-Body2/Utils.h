@@ -15,7 +15,7 @@
 //#define _DEBUG
 
 
-#ifdef _DEBUG
+#ifdef NDEBUG
 #define DEBUG_LOG(message, ...) Utils::DebugLog(message, ##__VA_ARGS__)
 #else
 #define DEBUG_LOG(message, ...)

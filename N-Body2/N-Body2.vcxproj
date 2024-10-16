@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Includes\cxxopts-3.2.0\include;C:\Includes\eigen-3.4.0;C:\Includes\include\include;C:\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Includes\cxxopts-3.2.0\include;C:\Includes\eigen-3.4.0;C:\Includes\include\include;C:\Includes;$(SolutionDir)N-Body2\OpenGL;$(SolutionDir)N-Body2\OpenGL\Libraries\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -121,7 +121,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Includes\cxxopts-3.2.0\include;C:\Includes\eigen-3.4.0;C:\Includes\include\include;C:\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Includes\cxxopts-3.2.0\include;C:\Includes\eigen-3.4.0;C:\Includes\include\include;C:\Includes;$(SolutionDir)N-Body2\OpenGL;$(SolutionDir)N-Body2\OpenGL\Libraries\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
@@ -138,6 +138,14 @@
     <ClInclude Include="Constants.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="OpenGL\Camera.h" />
+    <ClInclude Include="OpenGL\EBO.h" />
+    <ClInclude Include="OpenGL\Libraries\include\stb\stb_image.h" />
+    <ClInclude Include="OpenGL\Renderer.h" />
+    <ClInclude Include="OpenGL\Shader.h" />
+    <ClInclude Include="OpenGL\Texture.h" />
+    <ClInclude Include="OpenGL\VAO.h" />
+    <ClInclude Include="OpenGL\VBO.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="TreeWrapper.h" />
@@ -148,6 +156,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.tpp" />
+    <ClCompile Include="OpenGL\Camera.cpp" />
+    <ClCompile Include="OpenGL\EBO.cpp" />
+    <ClCompile Include="OpenGL\Renderer.cpp" />
+    <ClCompile Include="OpenGL\Shader.cpp" />
+    <ClCompile Include="OpenGL\stb.cpp" />
+    <ClCompile Include="OpenGL\Texture.cpp" />
+    <ClCompile Include="OpenGL\VAO.cpp" />
+    <ClCompile Include="OpenGL\VBO.cpp" />
     <ClCompile Include="Tree.tpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="TreeWrapper.tpp" />
@@ -162,6 +178,11 @@
     <None Include="Data\random_bodies.json" />
     <None Include="Data\test_bodies-1.json" />
     <None Include="Data\Two_Earths.json" />
+    <None Include="OpenGL\default.frag" />
+    <None Include="OpenGL\default.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="OpenGL\pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

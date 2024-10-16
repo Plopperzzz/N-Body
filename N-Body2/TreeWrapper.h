@@ -36,6 +36,8 @@ public:
 	void update(const double& dt);
 
 	void loadBodies(const std::string& filePath);
+	void extractPositions(std::vector<float>& positions);
+
 private:
 };
 

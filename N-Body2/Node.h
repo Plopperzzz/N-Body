@@ -67,6 +67,7 @@ public:
 	VecType position;
 	VecType velocity;
 	VecType force;
+	glm::vec4 color;
 	double mass;
 	double radius;
 
@@ -77,7 +78,7 @@ public:
 	Node();
 
 	// Creates new node with given properties
-	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius);
+	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius, glm::vec4 color);
 
 	// Gets node ID
 	int getId() const;

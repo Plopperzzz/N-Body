@@ -111,15 +111,6 @@ void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree
 	bool leaf = tree->isLeaf();
 	bool threshold = (tree->getLength() / glm::length(body.position - tree->m_centerOfMass)) < tree->m_theta;
 
-	// Debug: Print out the key variables to check their values
-	DEBUG_LOG("---- %s ----\n", body.name.c_str());
-	DEBUG_LOG("%s: Checking threshold\n", __func__);
-	DEBUG_LOG("\tTree length: %.2f\n", tree->getLength());
-	DEBUG_LOG("\tBody position: <%.2f, %.2f, %.2f>\n", body.position.x, body.position.y, body.position.z);
-	DEBUG_LOG("\tCenter of mass: <%.2f, %.2f, %.2f>\n", tree->m_centerOfMass.x, tree->m_centerOfMass.y, tree->m_centerOfMass.z);
-	DEBUG_LOG("\tTheta: %.2f\n", tree->m_theta);
-	DEBUG_LOG("\tThreshold: %d\n", threshold);
-
 	// Check if it's a leaf and has no bodies
 	if (leaf && (tree->m_currentBodyCount == 0))
 	{
@@ -351,6 +342,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		double l_mass = body_json["mass"];
 		double l_radius = body_json["radius"];
 		std::string l_name = body_json["name"];
+		glm::vec4 l_color(body_json["color"][0], body_json["color"][1], body_json["color"][2], body_json["color"][3]);
 
 		VecType pos, vel;
 
@@ -368,7 +360,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		Node<VecType> body = Node<VecType>(
 			l_id, l_name,
 			pos, vel,
-			l_mass, l_radius);
+			l_mass, l_radius,l_color);
 
 		insertBody(body);
 	}
@@ -378,6 +370,24 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 	return;
 }
 
+template <typename VecType>
+void TreeWrapper<VecType>::extractPositions(std::vector<float>& positions) {
+	for (const auto& node : nodeList) {
+		if constexpr (std::is_same_v<VecType, glm::dvec2>) {
+			positions.push_back(static_cast<float>(node.position.x));
+			positions.push_back(static_cast<float>(node.position.y));
+		}
+		else if constexpr (std::is_same_v<VecType, glm::dvec3>) {
+			positions.push_back(static_cast<float>(node.position.x));
+			positions.push_back(static_cast<float>(node.position.y));
+			positions.push_back(static_cast<float>(node.position.z));
+		}
+		//positions.push_back(static_cast<float>(node.color.r));
+		//positions.push_back(static_cast<float>(node.color.g));
+		//positions.push_back(static_cast<float>(node.color.b));
+		//positions.push_back(static_cast<float>(node.color.a));
+	}
+}
 
 #endif
 

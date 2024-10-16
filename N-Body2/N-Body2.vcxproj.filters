@@ -16,6 +16,30 @@
     <Filter Include="Data">
       <UniqueIdentifier>{4dcb158e-7e40-4563-9056-44a4abf92c11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OpenGL">
+      <UniqueIdentifier>{a3f43ea8-864f-47d7-af75-68083a0f770a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Libraries">
+      <UniqueIdentifier>{6f06e722-2a88-4b4f-be0c-3a33c6a20383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Libraries\include">
+      <UniqueIdentifier>{2f615f99-a827-4536-8916-15996f75298d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Libraries\include\stb">
+      <UniqueIdentifier>{89e3fb89-4f10-4763-b815-35769fb2340f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Header Files">
+      <UniqueIdentifier>{eaea54f8-5859-4a5c-9c34-6a02dd079f69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Source Files">
+      <UniqueIdentifier>{2f240341-b2c5-41a0-8031-0c7c8478b115}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Resources">
+      <UniqueIdentifier>{fb6e7cd9-4678-4ac6-a42e-e55925b7a8a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OpenGL\Resources\Shaders">
+      <UniqueIdentifier>{6aac5c03-680d-4550-a71a-9f8a5c85fd4f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Tree.h">
@@ -41,6 +65,30 @@
     </ClInclude>
     <ClInclude Include="MemoryPool.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Libraries\include\stb\stb_image.h">
+      <Filter>OpenGL\Libraries\include\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Renderer.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Shader.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Texture.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\VAO.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\VBO.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\EBO.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGL\Camera.h">
+      <Filter>OpenGL\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +116,30 @@
     <ClCompile Include="MemoryPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGL\Renderer.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Shader.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\stb.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Texture.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\VAO.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\VBO.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\Camera.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGL\EBO.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Earth_Moon_Sun.json">
@@ -94,5 +166,16 @@
     <None Include="Data\Two_Earths.json">
       <Filter>Data</Filter>
     </None>
+    <None Include="OpenGL\default.frag">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\default.vert">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="OpenGL\pop_cat.png">
+      <Filter>OpenGL</Filter>
+    </Image>
   </ItemGroup>
 </Project>
