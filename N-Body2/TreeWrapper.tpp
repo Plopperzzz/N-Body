@@ -55,9 +55,9 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, Node<VecType>& ot
 	VecType distance = body.position - other.position;
 	double norm = glm::length(distance);
 
-	if (norm > m_tree->m_epsilon)
+	if (norm > body.radius + other.radius)
 	{
-		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm);
+		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm + body.radius);
 	}
 	else
 	{
@@ -373,6 +373,8 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 template <typename VecType>
 void TreeWrapper<VecType>::extractPositions(std::vector<float>& positions) {
 	for (const auto& node : nodeList) {
+
+		// Set the position data
 		if constexpr (std::is_same_v<VecType, glm::dvec2>) {
 			positions.push_back(static_cast<float>(node.position.x));
 			positions.push_back(static_cast<float>(node.position.y));
@@ -382,10 +384,15 @@ void TreeWrapper<VecType>::extractPositions(std::vector<float>& positions) {
 			positions.push_back(static_cast<float>(node.position.y));
 			positions.push_back(static_cast<float>(node.position.z));
 		}
-		//positions.push_back(static_cast<float>(node.color.r));
-		//positions.push_back(static_cast<float>(node.color.g));
-		//positions.push_back(static_cast<float>(node.color.b));
-		//positions.push_back(static_cast<float>(node.color.a));
+
+		// set color data
+		positions.push_back(static_cast<float>(node.color.r));
+		positions.push_back(static_cast<float>(node.color.g));
+		positions.push_back(static_cast<float>(node.color.b));
+		positions.push_back(static_cast<float>(node.color.a));
+
+		// set radius data
+		positions.push_back(static_cast<float>(node.radius));
 	}
 }
 

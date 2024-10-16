@@ -16,31 +16,8 @@
 #include <VBO.h>
 #include <VAO.h>
 
-GLuint shaderProgram;
-glm::mat4 projection;
-
-// Function to extract positions from the TreeWrapper
-template <typename VecType>
-void extractPositions(const TreeWrapper<VecType>& treeWrapper, std::vector<float>& positions) {
-	for (const auto& node : treeWrapper.nodeList) {
-		if constexpr (std::is_same_v<VecType, glm::dvec2>) {
-			positions.push_back(static_cast<float>(node.position.x));
-			positions.push_back(static_cast<float>(node.position.y));
-		}
-		else if constexpr (std::is_same_v<VecType, glm::dvec3>) {
-			positions.push_back(static_cast<float>(node.position.x));
-			positions.push_back(static_cast<float>(node.position.y));
-			positions.push_back(static_cast<float>(node.position.z));
-		}
-		//positions.push_back(node.color.r);
-		//positions.push_back(node.color.g);
-		//positions.push_back(node.color.b);
-		//positions.push_back(node.color.a);
-	}
-}
-
-unsigned int width = 800;
-unsigned int height = 800;
+unsigned int width = 1200;
+unsigned int height = 1200;
 
 void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsigned char minor, const char* windowTitle)
 {
@@ -74,7 +51,7 @@ void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsi
 	GLCall(glEnable(GL_PROGRAM_POINT_SIZE));
 
 	// Viewport
-	glViewport(0, 0, 1500, 1500);
+	glViewport(0, 0, 4000, 4000);
 	glfwSwapInterval(0);
 	
 	return window;
@@ -86,33 +63,6 @@ void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsi
 //		- Memorypool class
 //		- In-place tree updates
 //		- Dynamic time stepping (global or per Node)
-
-// Framebuffer size callback function
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-	// Make sure the viewport matches the new window dimensions
-	glViewport(0, 0, width, height);
-
-	// Update the projection matrix to maintain the square aspect ratio
-	float aspectRatio = (float)width / (float)height;
-	float rootLength = 1e5;  // This should match your initial root length
-
-	if (aspectRatio > 1.0f) {
-		// Width is larger than height, adjust horizontally
-		projection = glm::ortho(-rootLength / 3.0f * aspectRatio, rootLength / 3.0f * aspectRatio,
-			-rootLength / 3.0f, rootLength / 3.0f,
-			-1.0f, 1.0f);
-	}
-	else {
-		// Height is larger than width, adjust vertically
-		projection = glm::ortho(-rootLength / 3.0f, rootLength / 3.0f,
-			-rootLength / 3.0f / aspectRatio, rootLength / 3.0f / aspectRatio,
-			-1.0f, 1.0f);
-	}
-
-	// Get the location of the uniform variable "uProjection" in the shader program
-	GLint projLoc = glGetUniformLocation(shaderProgram, "uProjection");
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection[0][0]);
-}
 
 int main(int argc, char** argv)
 {
@@ -207,6 +157,15 @@ int main(int argc, char** argv)
 	TestTree2d.loadBodies(input_path);
 	rootLength = TestTree2d.getTree().getLength();
 
+	double maxRad = TestTree2d.nodeList[0].radius;
+	for (auto& body : TestTree2d.nodeList)
+	{
+		if (body.radius > maxRad)
+		{
+			maxRad = body.radius;
+		}
+	}
+
 
 	// Extract positions from the TreeWrapper
 	std::vector<float> positions;
@@ -220,14 +179,17 @@ int main(int argc, char** argv)
 
 	VBO vbo[2] = { VBO(positions.data(), positions.size() * sizeof(float)), VBO(positions.data(), positions.size() * sizeof(float)) };
 
-	GLsizei stride = (2 + 4) * sizeof(float); // x, y, r, g, b, a
+	GLsizei stride = (2 + 4 + 1) * sizeof(float); // x, y, r, g, b, a, Radius
 
 	for (int i = 0; i < 2; ++i) {
 		// Position data
 		vao.LinkAttrib(vbo[i], 0, 2, GL_FLOAT, stride, (void*)0);
 
 		// Color data
-		vao.LinkAttrib(vbo[i], 1, 4, GL_FLOAT, stride, (void*)(3 * sizeof(float)));  // Color
+		vao.LinkAttrib(vbo[i], 1, 4, GL_FLOAT, stride, (void*)(2 * sizeof(float)));  // Color
+
+		// Radius data
+		vao.LinkAttrib(vbo[i], 2, 1, GL_FLOAT, stride, (void*)(6 * sizeof(float)));  // Color
 	}
 
 	vao.Unbind();
@@ -273,7 +235,7 @@ int main(int argc, char** argv)
 	int nbFrames = 0;
 
 	// Get the location of the uniform variable "uProjection" in the shader program
-	GLint projLoc = glGetUniformLocation(shader.ID, "camMatrix");
+	//GLint projLoc = glGetUniformLocation(shader.ID, "camMatrix");
 
 	int currentBuffer = 0; // Index to alternate between VBOs
 	// Main loop
@@ -314,12 +276,12 @@ int main(int argc, char** argv)
 		glClearColor(0.01f, 0.1f, 0.1f, 1.0f); // Dark gray background
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
 		// Use the shader program
 		shader.Bind();
 
 		// Set the uniform for the projection matrix
 		camera.Matrix(shader, "camMatrix");
+		shader.SetUniform1f("radius", maxRad);
 
 		// Bind VAO
 		vao.Bind();

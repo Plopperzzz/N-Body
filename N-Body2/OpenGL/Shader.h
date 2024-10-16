@@ -19,6 +19,7 @@ public:
 	Shader(const char* vertexFile, const char* fragmentFile);
 
 
+	void SetUniform1f(const char* uniform, float v0);
 	void Bind();
 	void Unbind();
 };

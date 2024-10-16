@@ -79,6 +79,11 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 }
 
 
+void Shader::SetUniform1f(const char* uniform, float v0)
+{
+	glUniform1f(glGetUniformLocation(ID, uniform), v0);
+}
+
 void Shader::Bind()
 {
 	GLCall(glUseProgram(ID));
