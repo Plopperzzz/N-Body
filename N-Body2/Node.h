@@ -71,6 +71,8 @@ public:
 	double mass;
 	double radius;
 
+	bool deleted = false;
+
 
 public:
 

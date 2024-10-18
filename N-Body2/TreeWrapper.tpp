@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <execution>
 #include <mutex>
+#include <algorithm>
 
 #include "TreeWrapper.h"
 
@@ -46,6 +47,47 @@ void TreeWrapper<VecType>::insertBody(Node<VecType>& body)
 	++m_totalBodies;
 }
 
+template<typename VecType>
+void TreeWrapper<VecType>::deleteBody(int id, std::shared_ptr<Tree<VecType>> tree)
+{
+	bool leaf = tree->isLeaf();
+
+	// Check if it's a leaf and has no bodies
+	if (leaf && (tree->m_currentBodyCount == 0))
+	{
+		return;
+	}
+
+	// Check if it is a branch
+	else if (!leaf)
+	{
+			for (const auto& childTree : tree->m_children)
+			{
+				if (childTree && childTree->m_totalDescendants > 0)
+				{
+					deleteBody(id, childTree);
+				}
+			}
+	}
+
+	// It is a leaf and has one or more bodies
+	else
+	{
+		for (auto it = tree->m_body.begin(); it != tree->m_body.end(); ++it)
+		{
+			// Skip force calculation if the otherBody is the same as body
+			if (it->getId() == id)
+			{
+				tree->m_body.erase(it);
+				tree->m_currentBodyCount--;
+				// get otherBody index and remove from vector tree->m_body
+			}
+		}
+	}
+
+	return;
+}
+
 
 
 // Calculates the forces between to Nodes, body and other, and updates `body`s force
@@ -55,14 +97,20 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, Node<VecType>& ot
 	VecType distance = body.position - other.position;
 	double norm = glm::length(distance);
 
-	if (norm > body.radius + other.radius)
+	if (norm > 10*(body.radius + other.radius))
 	{
 		body.force += -G * body.mass * other.mass * distance / (norm * norm * norm + body.radius);
 	}
 	else
 	{
-		// to prevent this
-		std::cerr << "WARNING: Distance between bodies is too small\n" << "------ " << body.name << std::endl;
+		std::cerr << "WARNING: Collision\n" << "------ " << body.name << std::endl;
+
+		//// Combine bodies in perfectly inelastic collision
+		//body.velocity = (body.mass * body.velocity + other.mass * other.velocity) / (body.mass + other.mass);
+		//body.mass += other.mass;
+
+		//deleteBody(other.getId(), m_tree);
+		
 	}
 }
 
@@ -108,6 +156,8 @@ void TreeWrapper<VecType>::calculateForceBi(Node<VecType>& body, Node<VecType>& 
 template <typename VecType>
 void TreeWrapper<VecType>::updateForce(Node<VecType>& body, std::shared_ptr<Tree<VecType>> tree)
 {
+	if (body.deleted)
+		return;
 	bool leaf = tree->isLeaf();
 	bool threshold = (tree->getLength() / glm::length(body.position - tree->m_centerOfMass)) < tree->m_theta;
 
@@ -175,13 +225,14 @@ void TreeWrapper<VecType>::update(const double& dt)
 			std::cout << "found null body in update loop\n";
 		}
 
+
 		// Velocity verlet integration
 
 		// Calculate acceleration from force and get the new position
 		VecType acc = body.force / body.mass;
 		VecType new_pos = body.position + body.velocity * dt + acc * (dt * dt * 0.5);
 
-		// If body has gone too far, delete it
+		// If body has gone too far, delete i
 		if (glm::length(m_tree->m_centerOfMass - new_pos) > 3*max)
 		{
 			return;
@@ -218,6 +269,8 @@ void TreeWrapper<VecType>::update(const double& dt)
 
 	// Insert bodies sequentially into the new tree
 	for (Node<VecType>& body : nodeList) {
+		if (body.deleted)
+			continue;
 		Node<VecType> bodyCopy = body;
 		newTree->insertBody(bodyCopy);
 	}

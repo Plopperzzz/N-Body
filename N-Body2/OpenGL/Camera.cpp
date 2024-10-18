@@ -148,7 +148,7 @@ void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 	float worldY = Position.y + ndcY * (viewHeight / 2.0f);
 
 	// Define zoom speed
-	const float zoomFactor = 1.1f;
+	const float zoomFactor = 1.05f;
 
 	// Update zoom level
 	if (yoffset > 0)
@@ -158,7 +158,7 @@ void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 		orthoRight = worldX + (orthoRight - worldX) / zoomFactor;
 		orthoBottom = worldY + (orthoBottom - worldY) / zoomFactor;
 		orthoTop = worldY + (orthoTop - worldY) / zoomFactor;
-		zoomLevel += 0.1 * zoomFactor;
+		zoomLevel += 0.05 * zoomFactor;
 	}
 	else if (yoffset < 0)
 	{
@@ -167,7 +167,7 @@ void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 		orthoRight = worldX + (orthoRight - worldX) * zoomFactor;
 		orthoBottom = worldY + (orthoBottom - worldY) * zoomFactor;
 		orthoTop = worldY + (orthoTop - worldY) * zoomFactor;
-		zoomLevel -= 0.1 / zoomFactor;
+		zoomLevel -= 0.05 / zoomFactor;
 	}
 
 	// After zooming, calculate the new view dimensions
