@@ -33,6 +33,7 @@ public:
 	// Adjust the speed of the camera and it's sensitivity when looking around
 	float speed;
 	float sensitivity;
+	float zoomLevel;
 
 	// Projection Parameters
 	bool isOrthographic;

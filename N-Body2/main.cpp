@@ -286,6 +286,7 @@ int main(int argc, char** argv)
 		// Set the uniform for the projection matrix
 		camera.Matrix(shader, "camMatrix");
 		shader.SetUniform1f("radius", maxRad);
+		shader.SetUniform1f("zoom", camera.zoomLevel);
 
 		// Bind VAO
 		vao.Bind();

@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/N-Body2/Data/CCRandom-4000.json
+/N-Body2/Data/random_bodies.json
+/N-Body2/Data/test_bodies-1.json

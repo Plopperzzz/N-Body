@@ -10,6 +10,7 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	firstClick = true;
 	speed = 1e15f;
 	sensitivity = 100.0f;
+	zoomLevel = 1.0f;
 
 	// Default to perspective projection
 	isOrthographic = false;
@@ -90,7 +91,43 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	// Get cursor position
+	//// Get cursor position
+	//double xpos, ypos;
+	//glfwGetCursorPos(window, &xpos, &ypos);
+
+	//// Get viewport dimensions
+	//int viewportWidth, viewportHeight;
+	//glfwGetWindowSize(window, &viewportWidth, &viewportHeight);
+
+	//// Convert cursor position to normalized device coordinates (-1 to 1)
+	//double ndcX = (2.0 * xpos) / viewportWidth - 1.0;
+	//double ndcY = 1.0 - (2.0 * ypos) / viewportHeight; // Note: Y is flipped in screen coordinates
+
+	//// Calculate the world coordinates of the cursor position before zooming
+	//double worldX = orthoLeft + (ndcX + 1.0) * (orthoRight - orthoLeft) / 2.0;
+	//double worldY = orthoBottom + (ndcY + 1.0) * (orthoTop - orthoBottom) / 2.0;
+
+	//// Adjust zoom speed
+	//float zoomSpeed = 1.1f;
+
+	//// Zoom in or out
+	//if (yoffset > 0) {
+	//	// Zoom in
+	//	orthoLeft = worldX + (orthoLeft - worldX) / zoomSpeed;
+	//	orthoRight = worldX + (orthoRight - worldX) / zoomSpeed;
+	//	orthoBottom = worldY + (orthoBottom - worldY) / zoomSpeed;
+	//	orthoTop = worldY + (orthoTop - worldY) / zoomSpeed;
+	//	zoomLevel += 0.1 * zoomSpeed;
+	//}
+	//else if (yoffset < 0) {
+	//	// Zoom out
+	//	orthoLeft = worldX + (orthoLeft - worldX) * zoomSpeed;
+	//	orthoRight = worldX + (orthoRight - worldX) * zoomSpeed;
+	//	orthoBottom = worldY + (orthoBottom - worldY) * zoomSpeed;
+	//	orthoTop = worldY + (orthoTop - worldY) * zoomSpeed;
+	//	zoomLevel -= 0.1 / zoomSpeed;
+	//}
+		// Get cursor position
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 
@@ -100,30 +137,51 @@ void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 
 	// Convert cursor position to normalized device coordinates (-1 to 1)
 	double ndcX = (2.0 * xpos) / viewportWidth - 1.0;
-	double ndcY = 1.0 - (2.0 * ypos) / viewportHeight; // Note: Y is flipped in screen coordinates
+	double ndcY = 1.0 - (2.0 * ypos) / viewportHeight; // Y is flipped
 
-	// Calculate the world coordinates of the cursor position before zooming
-	double worldX = orthoLeft + (ndcX + 1.0) * (orthoRight - orthoLeft) / 2.0;
-	double worldY = orthoBottom + (ndcY + 1.0) * (orthoTop - orthoBottom) / 2.0;
+	// Calculate the current view dimensions based on zoom
+	float viewWidth = (orthoRight - orthoLeft) / zoomLevel;
+	float viewHeight = (orthoTop - orthoBottom) / zoomLevel;
 
-	// Adjust zoom speed
-	float zoomSpeed = 1.1f;
+	// Calculate world coordinates relative to camera position
+	float worldX = Position.x + ndcX * (viewWidth / 2.0f);
+	float worldY = Position.y + ndcY * (viewHeight / 2.0f);
 
-	// Zoom in or out
-	if (yoffset > 0) {
+	// Define zoom speed
+	const float zoomFactor = 1.1f;
+
+	// Update zoom level
+	if (yoffset > 0)
+	{
 		// Zoom in
-		orthoLeft = worldX + (orthoLeft - worldX) / zoomSpeed;
-		orthoRight = worldX + (orthoRight - worldX) / zoomSpeed;
-		orthoBottom = worldY + (orthoBottom - worldY) / zoomSpeed;
-		orthoTop = worldY + (orthoTop - worldY) / zoomSpeed;
+		orthoLeft = worldX + (orthoLeft - worldX) / zoomFactor;
+		orthoRight = worldX + (orthoRight - worldX) / zoomFactor;
+		orthoBottom = worldY + (orthoBottom - worldY) / zoomFactor;
+		orthoTop = worldY + (orthoTop - worldY) / zoomFactor;
+		zoomLevel += 0.1 * zoomFactor;
 	}
-	else if (yoffset < 0) {
+	else if (yoffset < 0)
+	{
 		// Zoom out
-		orthoLeft = worldX + (orthoLeft - worldX) * zoomSpeed;
-		orthoRight = worldX + (orthoRight - worldX) * zoomSpeed;
-		orthoBottom = worldY + (orthoBottom - worldY) * zoomSpeed;
-		orthoTop = worldY + (orthoTop - worldY) * zoomSpeed;
+		orthoLeft = worldX + (orthoLeft - worldX) * zoomFactor;
+		orthoRight = worldX + (orthoRight - worldX) * zoomFactor;
+		orthoBottom = worldY + (orthoBottom - worldY) * zoomFactor;
+		orthoTop = worldY + (orthoTop - worldY) * zoomFactor;
+		zoomLevel -= 0.1 / zoomFactor;
 	}
+
+	// After zooming, calculate the new view dimensions
+	float newViewWidth = (orthoRight - orthoLeft) / zoomLevel;
+	float newViewHeight = (orthoTop - orthoBottom) / zoomLevel;
+
+	// Adjust camera position to keep the worldX, worldY under the cursor stationary
+	Position.x = worldX - ndcX * (newViewWidth / 2.0f);
+	Position.y = worldY - ndcY * (newViewHeight / 2.0f);
+
+	//if (zoomLevel <= 0.001)
+	//	zoomLevel = 0.002;
+	//if (zoomLevel >= 10.0f)
+	//	zoomLevel = 10.0f;
 
 	// Update orthographic projection settings
 	SetOrthographic(orthoLeft, orthoRight, orthoBottom, orthoTop, nearPlane, farPlane);
