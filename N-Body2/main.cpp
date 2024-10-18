@@ -16,9 +16,9 @@
 #include <VBO.h>
 #include <VAO.h>
 
-#define WHITE 1.0,1.0,1.0
-#define BLACK 0.0,0.0,0.0
-#define DGRAY 0.1,0.2,0.1
+#define WHITE 1.00, 1.00, 1.00
+#define BLACK 0.00, 0.00, 0.00
+#define DGRAY 0.11, 0.12, 0.13
 
 unsigned int width = 1200;
 unsigned int height = 1200;
