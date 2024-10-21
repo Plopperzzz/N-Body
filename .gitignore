@@ -366,3 +366,13 @@ FodyWeavers.xsd
 /N-Body2/Data/test_bodies-1.json
 /N-Body2/Data/galaxies2.json
 /N-Body2/Data/galaxy.json
+/N-Body2/Data/CCRandom-10000.json
+/N-Body2/Data/CCRandom-20000.json
+/N-Body2/Data/CRandom-1000.json
+/N-Body2/Data/CRandom-10000.json
+/N-Body2/Data/CRandom-2-10000.json
+/N-Body2/Data/CRandom-4000.json
+/N-Body2/Data/galaxies.json
+/N-Body2/Data/galaxies_2.json
+/N-Body2/Data/Solar_System.json
+/N-Body2/Data/two_galaxies.json

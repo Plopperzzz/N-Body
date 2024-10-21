@@ -22,13 +22,13 @@ void main()
     //FragColor = vec4(color.rgb, 1.0 - alpha);
     // Set color and transparency
     // Black hole?
-    //FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha + sin(1/alpha)), 1.0 - alpha);
+    FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha + sin(1/alpha)), 1.0 - alpha);
 
     // Black hole2 ?
     //FragColor = vec4(color.rgb*tan(alpha)/(1 - alpha * alpha), 1.0 - alpha);
 
     // Star
-    FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha), 1.0 - alpha);
+    //FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha), 1.0 - alpha);
 
 
     //FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha), 1.0 - alpha);

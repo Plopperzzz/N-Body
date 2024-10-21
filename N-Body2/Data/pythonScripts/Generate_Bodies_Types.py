@@ -5,8 +5,7 @@ import math
 import sys
 
 G = 6.67430e-11  # Gravitational constant
-#BODY_TYPES = ["Star", "Quazar", "Planet", "Comet", "Asteroid", "Blackhole", "Wormhole"]
-BODY_TYPES = ["Star", "Planet", "Blackhole"]
+BODY_TYPES = ["Star", "Quazar", "Planet", "Comet", "Asteroid", "Blackhole", "Wormhole"]
 
 def generate_random_bodies(num_bodies, mass_range, radius_range, position_range, velocity_range, start_id=0):
     bodies = []

@@ -11,7 +11,6 @@
 
 #include <glad/glad.h>
 #include <Shader.h>
-//#include <Camera.h>
 #include "GFX.h"
 #include <EBO.h>
 #include <VBO.h>
@@ -121,6 +120,7 @@ int main(int argc, char** argv)
 	Shader star_shader((path + "/default.vert").c_str(), (path + "/star.frag").c_str());
 	Shader blackhole_shader((path + "/default.vert").c_str(), (path + "/BlackHole.frag").c_str());
 	Shader planet_shader((path + "/default.vert").c_str(), (path + "/Planet.frag").c_str());
+	Shader wormhole_shader((path + "/default.vert").c_str(), (path + "/WormHole.frag").c_str());
 	Shader default_shader((path + "/default.vert").c_str(), (path + "/default.frag").c_str());
 
 	/*************************************************************/
@@ -167,6 +167,9 @@ int main(int argc, char** argv)
 			break;
 		case BodyType::Blackhole:
 			renderGroup.Init(blackhole_shader, stride);
+			break;
+		case BodyType::Wormhole:
+			renderGroup.Init(wormhole_shader, stride);
 			break;
 		default:
 			renderGroup.Init(default_shader, stride);
@@ -225,28 +228,12 @@ int main(int argc, char** argv)
 		TestTree2d.update(dt);
 
 		TestTree2d.extractPositions(positions);
+			glClearColor(BLACK, 1.0f); // Dark gray background
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Dark gray background
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (auto& [type, renderGroup] : positions)
 		{
-			std::string obType;
-			switch (type)
-			{
-			case BodyType::Star:
-				obType = "Star";
-				break;
-			case BodyType::Blackhole:
-				obType = "Black Hole";
-				break;
-			case BodyType::Planet:
-				obType = "Planet";
-				break;
-			default:
-				obType = "Default";
-				break;
-			}
-
-			std::cout << "Rendering:\n\t" << obType << std::endl;
-
 			renderGroup.Render(camera, maxRad, 7, NULL);
 		}
 

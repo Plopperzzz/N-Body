@@ -38,11 +38,6 @@ void RenderGroup::Render(Camera& cam, float maxRad, GLuint attribCount, GLFWwind
 			// Switch to the other buffer for the next frame
 			currentBuffer = (currentBuffer + 1) % 2;
 
-			// Render
-			glClearColor(BLACK, 1.0f); // Dark gray background
-			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Dark gray background
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 			// Use the shader program
 			shader.Bind();
 
@@ -59,7 +54,7 @@ void RenderGroup::Render(Camera& cam, float maxRad, GLuint attribCount, GLFWwind
 			glBindBuffer(GL_ARRAY_BUFFER, vbos[currentBuffer].ID);
 
 			// Draw points
-			glDrawArrays(GL_POINTS, 0, data.size() / 7); // positions.size() / 2 for 2D
+			glDrawArrays(GL_POINTS, 0, data.size() / attribCount); // positions.size() / 2 for 2D
 
 			// Unbind VAO
 			vao.Unbind();

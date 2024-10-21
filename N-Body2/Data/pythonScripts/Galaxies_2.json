@@ -1,6 +1,6 @@
 [
   {
-    "num_bodies": 70000,
+    "num_bodies": 7000,
     "mass_range": [ 1e20, 1e30 ],
     "radius_range": [ 1e3, 1e5 ],
     "min_radius": 1e9,
