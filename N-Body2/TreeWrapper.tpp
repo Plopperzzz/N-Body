@@ -10,6 +10,7 @@
 template <typename VecType>
 TreeWrapper<VecType>::TreeWrapper(std::shared_ptr<Tree<VecType>> root) :
 	nodeList(),
+	bodiesByType(),
 	m_totalBodies(0),
 	m_tree(root)
 {
@@ -44,6 +45,8 @@ void TreeWrapper<VecType>::insertBody(Node<VecType>& body)
 	// Create a copy
 	Node<VecType> nodeCopy = body;
 	nodeList.push_back(nodeCopy);
+	bodiesByType[body.type].push_back(body);
+
 	++m_totalBodies;
 }
 
@@ -103,7 +106,7 @@ void TreeWrapper<VecType>::calculateForce(Node<VecType>& body, Node<VecType>& ot
 	}
 	else
 	{
-		std::cerr << "WARNING: Collision\n" << "------ " << body.name << std::endl;
+		//std::cerr << "WARNING: Collision\n" << "------ " << body.name << std::endl;
 
 		//// Combine bodies in perfectly inelastic collision
 		//body.velocity = (body.mass * body.velocity + other.mass * other.velocity) / (body.mass + other.mass);
@@ -397,6 +400,9 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		std::string l_name = body_json["name"];
 		glm::vec4 l_color(body_json["color"][0], body_json["color"][1], body_json["color"][2], body_json["color"][3]);
 
+		std::string typeStr = body_json["type"];
+		BodyType l_type = stringToBodyType(typeStr);
+
 		VecType pos, vel;
 
 		if constexpr (VecDimensions<VecType>::value == 3)
@@ -413,7 +419,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 		Node<VecType> body = Node<VecType>(
 			l_id, l_name,
 			pos, vel,
-			l_mass, l_radius,l_color);
+			l_mass, l_radius, l_type, l_color);
 
 		insertBody(body);
 	}
@@ -446,6 +452,37 @@ void TreeWrapper<VecType>::extractPositions(std::vector<float>& positions) {
 
 		// set radius data
 		positions.push_back(static_cast<float>(node.radius));
+	}
+}
+
+template <typename VecType>
+void TreeWrapper<VecType>::extractPositions(std::unordered_map<BodyType, RenderGroup>& positions) {
+	for (auto& [type, renderGroup] : positions)
+	{
+		renderGroup.data.clear();
+	}
+
+	for (const auto& node : nodeList) {
+
+		// Set the position data
+		if constexpr (std::is_same_v<VecType, glm::dvec2>) {
+			positions[node.type].data.push_back(static_cast<float>(node.position.x));
+			positions[node.type].data.push_back(static_cast<float>(node.position.y));
+		}
+		else if constexpr (std::is_same_v<VecType, glm::dvec3>) {
+			positions[node.type].data.push_back(static_cast<float>(node.position.x));
+			positions[node.type].data.push_back(static_cast<float>(node.position.y));
+			positions[node.type].data.push_back(static_cast<float>(node.position.z));
+		}
+
+		// set color data
+		positions[node.type].data.push_back(static_cast<float>(node.color.r));
+		positions[node.type].data.push_back(static_cast<float>(node.color.g));
+		positions[node.type].data.push_back(static_cast<float>(node.color.b));
+		positions[node.type].data.push_back(static_cast<float>(node.color.a));
+
+		// set radius data
+		positions[node.type].data.push_back(static_cast<float>(node.radius));
 	}
 }
 

@@ -14,11 +14,12 @@ Node<VecType>::Node() :
 	force(),
 	mass(0.0),
 	radius(0.0),
-	color(1.0)
+	color(1.0),
+	type(BodyType::Planet)
 {}
 
 template <typename VecType>
-Node<VecType>::Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius, glm::vec4 color) :
+Node<VecType>::Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius, BodyType type, glm::vec4 color) :
 	m_id(id),
 	position(position),
 	velocity(velocity),
@@ -26,6 +27,7 @@ Node<VecType>::Node(int id, std::string name, VecType position, VecType velocity
 	name(name),
 	mass(mass),
 	radius(radius),
+	type(type),
 	color(color)
 {}
 

@@ -16,6 +16,7 @@ class Shader
 {
 public:
 	GLuint ID;
+	Shader() :ID() {};
 	Shader(const char* vertexFile, const char* fragmentFile);
 
 

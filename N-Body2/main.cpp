@@ -11,56 +11,22 @@
 
 #include <glad/glad.h>
 #include <Shader.h>
-#include <Camera.h>
+//#include <Camera.h>
+#include "GFX.h"
 #include <EBO.h>
 #include <VBO.h>
 #include <VAO.h>
 
-#define WHITE 1.00, 1.00, 1.00
-#define BLACK 0.00, 0.00, 0.00
-#define DGRAY 0.11, 0.12, 0.13
+
+#ifdef _DEBUG
+std::string path = "./OpenGL";
+#else
+std::string path = "../../N-Body2/OpenGL";
+#endif
+
 
 unsigned int width = 1200;
 unsigned int height = 1200;
-
-void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsigned char minor, const char* windowTitle)
-{
-	// Initialize GLFW
-	if (!glfwInit()) {
-		std::cerr << "Failed to initialize GLFW\n";
-		return 0;
-	}
-
-
-	// Set OpenGL version (3.3 Core)
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// For Mac OS X
-	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-	// Create a windowed mode window and its OpenGL context
-	GLFWwindow* window = glfwCreateWindow(width, height, windowTitle, NULL, NULL);
-	if (!window) {
-		std::cerr << "Failed to open GLFW window\n";
-		glfwTerminate();
-		return 0;
-	}
-	// Make the window's context current
-	glfwMakeContextCurrent(window);
-
-	// Initialize GLEW (note: must be done after making context current)
-	gladLoadGL();
-	// After initializing GLEW and before your render loop
-	GLCall(glEnable(GL_PROGRAM_POINT_SIZE));
-
-	// Viewport
-	glViewport(0, 0, 4000, 4000);
-	glfwSwapInterval(0);
-	
-	return window;
-
-}
 
 
 // TODO:
@@ -131,7 +97,6 @@ int main(int argc, char** argv)
 	std::string gnuCommand = "wsl gnuplot " + script_path;
 #endif
 
-
 	// Global or static variables
 	std::ofstream orbitFile(data_name, std::ios::out | std::ios::trunc);
 	orbitFile.close();
@@ -147,8 +112,16 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glPointSize(6.0f);
+	// Get the current working directory
+	std::filesystem::path cwd = std::filesystem::current_path();
+
+	// Print the current working directory
+	std::cout << "Current Working Directory: " << cwd << std::endl;
 	// Compile vertex shader
-	Shader shader("../../N-Body2/OpenGL/default.vert", "../../N-Body2/OpenGL/default.frag");
+	Shader star_shader((path + "/default.vert").c_str(), (path + "/star.frag").c_str());
+	Shader blackhole_shader((path + "/default.vert").c_str(), (path + "/BlackHole.frag").c_str());
+	Shader planet_shader((path + "/default.vert").c_str(), (path + "/Planet.frag").c_str());
+	Shader default_shader((path + "/default.vert").c_str(), (path + "/default.frag").c_str());
 
 	/*************************************************************/
 	/************************** SETUP ****************************/
@@ -176,40 +149,39 @@ int main(int argc, char** argv)
 
 
 	// Extract positions from the TreeWrapper
-	std::vector<float> positions;
+	//std::vector<float> positions;
+	std::unordered_map<BodyType, RenderGroup> positions;
 	//extractPositions(TestTree2d, positions);
 	TestTree2d.extractPositions(positions);
-
-	// Create buffers/arrays
-	//GLuint VBOs[2];// , VAO;
-	VAO vao;
-	vao.Bind();
-
-	VBO vbo[2] = { VBO(positions.data(), positions.size() * sizeof(float)), VBO(positions.data(), positions.size() * sizeof(float)) };
-
 	GLsizei stride = (2 + 4 + 1) * sizeof(float); // x, y, r, g, b, a, Radius
 
-	for (int i = 0; i < 2; ++i) {
-		// Position data
-		vao.LinkAttrib(vbo[i], 0, 2, GL_FLOAT, stride, (void*)0);
-
-		// Color data
-		vao.LinkAttrib(vbo[i], 1, 4, GL_FLOAT, stride, (void*)(2 * sizeof(float)));  // Color
-
-		// Radius data
-		vao.LinkAttrib(vbo[i], 2, 1, GL_FLOAT, stride, (void*)(6 * sizeof(float)));  // Color
+	for (auto& [type, renderGroup] : positions)
+	{
+		switch (type)
+		{
+		case BodyType::Planet:
+			renderGroup.Init(planet_shader, stride);
+			break;
+		case BodyType::Star:
+			renderGroup.Init(star_shader, stride);
+			break;
+		case BodyType::Blackhole:
+			renderGroup.Init(blackhole_shader, stride);
+			break;
+		default:
+			renderGroup.Init(default_shader, stride);
+			break;
+		}
 	}
-
-	vao.Unbind();
 
 	// After updating rootLength
 	rootLength = TestTree2d.getTree().getLength();
 
-	// Set up projection matrix for orthographic projection
-	float left = -rootLength;// / 2;
-	float right = rootLength;// / 2;
-	float bottom = -rootLength;// / 2;
-	float top = rootLength;// / 2;
+	//	// Set up projection matrix for orthographic projection
+	float left = -rootLength / 2;
+	float right = rootLength / 2;
+	float bottom = -rootLength / 2;
+	float top = rootLength / 2;
 	float nearPlane = -1.0;
 	float farPlane = 1.0;
 
@@ -232,7 +204,6 @@ int main(int argc, char** argv)
 		Camera* cam = static_cast<Camera*>(glfwGetWindowUserPointer(window));
 		cam->MouseButtonCallback(window, button, action, mods);
 		});
-
 	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
 		Camera* cam = static_cast<Camera*>(glfwGetWindowUserPointer(window));
 		cam->CursorPositionCallback(window, xpos, ypos);
@@ -248,74 +219,51 @@ int main(int argc, char** argv)
 	int currentBuffer = 0; // Index to alternate between VBOs
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
-		// Input handling here (if needed)
-		double currentTime = glfwGetTime();
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last print was more than 1 sec ago
-			// Calculate FPS and frame time
-			double fps = double(nbFrames) / (currentTime - lastTime);
-			double msPerFrame = 1000.0 / fps;
 
-			// Print to console
-			std::cout << msPerFrame << " ms/frame (" << fps << " FPS)" << std::endl;
-
-			// Reset for next calculation
-			nbFrames = 0;
-			lastTime = currentTime;
-		}
+		GFXFrameTime(lastTime, nbFrames);
 		// Update simulation
 		TestTree2d.update(dt);
 
-		// Extract updated positions
-		positions.clear();
-		//extractPositions(TestTree2d, positions);
 		TestTree2d.extractPositions(positions);
 
-		// Update the vertex buffer
-		vbo[currentBuffer].Bind();
-		glBufferSubData(GL_ARRAY_BUFFER, 0, positions.size() * sizeof(float), positions.data());
-		//glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), positions.data(), GL_DYNAMIC_DRAW);
-		vbo[currentBuffer].Unbind();
+		for (auto& [type, renderGroup] : positions)
+		{
+			std::string obType;
+			switch (type)
+			{
+			case BodyType::Star:
+				obType = "Star";
+				break;
+			case BodyType::Blackhole:
+				obType = "Black Hole";
+				break;
+			case BodyType::Planet:
+				obType = "Planet";
+				break;
+			default:
+				obType = "Default";
+				break;
+			}
 
-		// Switch to the other buffer for the next frame
-		currentBuffer = (currentBuffer + 1) % 2;
+			std::cout << "Rendering:\n\t" << obType << std::endl;
 
-		// Render
-		glClearColor(BLACK, 1.0f); // Dark gray background
-		//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Dark gray background
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Use the shader program
-		shader.Bind();
-
-		// Set the uniform for the projection matrix
-		camera.Matrix(shader, "camMatrix");
-		shader.SetUniform1f("radius", maxRad);
-		shader.SetUniform1f("zoom", camera.zoomLevel);;
-
-		// Bind VAO
-		vao.Bind();
-
-
-		// Bind the appropriate VBO
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[currentBuffer].ID);
-
-		// Draw points
-		glDrawArrays(GL_POINTS, 0, positions.size() / 2); // positions.size() / 2 for 2D
-
-		// Unbind VAO
-		vao.Unbind();
+			renderGroup.Render(camera, maxRad, 7, NULL);
+		}
 
 		// Swap buffers and poll IO events
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	// Deallocate resources
-	vao.Delete();
-	vbo[0].Delete();
-	vbo[1].Delete();
+	for (auto& [type, renderGroup] : positions)
+	{
+		// Deallocate resources
+		renderGroup.vao.Delete();
+		renderGroup.vbos[0].Delete();
+		renderGroup.vbos[1].Delete();
 
+
+	}
 	// Terminate GLFW
 	glfwTerminate();
 
@@ -325,4 +273,3 @@ int main(int argc, char** argv)
 	signal(SIGINT, Utils::signalHandler);
 
 }
-

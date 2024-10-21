@@ -1,0 +1,219 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "B:\\repos\\N-Body\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\RenderGroup.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\RenderGroup.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\RenderGroup.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\RenderGroup.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\OpenGL\\Shader.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\TreeWrapper.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\TreeWrapper.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\TreeWrapper.tpp||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\TreeWrapper.tpp||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\Constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\Constants.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\BoxBase.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\BoxBase.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\OpenGL\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\OpenGL\\Renderer.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\Node.tpp||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\Node.tpp||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{EED195F4-566E-459B-93E9-799498F05D9E}|N-Body2\\N-Body2.vcxproj|solutionrelative:N-Body2\\OpenGL\\Shader.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 445,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RenderGroup.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\RenderGroup.h",
+              "RelativeDocumentMoniker": "N-Body2\\RenderGroup.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\RenderGroup.h",
+              "RelativeToolTip": "N-Body2\\RenderGroup.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-21T12:46:15.744Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Node.tpp",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\Node.tpp",
+              "RelativeDocumentMoniker": "N-Body2\\Node.tpp",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\Node.tpp",
+              "RelativeToolTip": "N-Body2\\Node.tpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-20T23:40:12.023Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Shader.cpp",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.cpp",
+              "RelativeDocumentMoniker": "N-Body2\\OpenGL\\Shader.cpp",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.cpp",
+              "RelativeToolTip": "N-Body2\\OpenGL\\Shader.cpp",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-15T00:26:25.179Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.cpp",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\main.cpp",
+              "RelativeDocumentMoniker": "N-Body2\\main.cpp",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\main.cpp",
+              "RelativeToolTip": "N-Body2\\main.cpp",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAowHcAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-09T01:52:13.864Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 350,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RenderGroup.cpp",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\RenderGroup.cpp",
+              "RelativeDocumentMoniker": "N-Body2\\RenderGroup.cpp",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\RenderGroup.cpp",
+              "RelativeToolTip": "N-Body2\\RenderGroup.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-10-21T12:52:56.37Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Renderer.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Renderer.h",
+              "RelativeDocumentMoniker": "N-Body2\\OpenGL\\Renderer.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Renderer.h",
+              "RelativeToolTip": "N-Body2\\OpenGL\\Renderer.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-21T00:17:05.853Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Constants.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\Constants.h",
+              "RelativeDocumentMoniker": "N-Body2\\Constants.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\Constants.h",
+              "RelativeToolTip": "N-Body2\\Constants.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-16T00:41:40.667Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TreeWrapper.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\TreeWrapper.h",
+              "RelativeDocumentMoniker": "N-Body2\\TreeWrapper.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\TreeWrapper.h",
+              "RelativeToolTip": "N-Body2\\TreeWrapper.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-15T19:38:33.581Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BoxBase.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\BoxBase.h",
+              "RelativeDocumentMoniker": "N-Body2\\BoxBase.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\BoxBase.h",
+              "RelativeToolTip": "N-Body2\\BoxBase.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-15T02:07:26.933Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Shader.h",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.h",
+              "RelativeDocumentMoniker": "N-Body2\\OpenGL\\Shader.h",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\OpenGL\\Shader.h",
+              "RelativeToolTip": "N-Body2\\OpenGL\\Shader.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-10-15T02:00:05.881Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 329,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TreeWrapper.tpp",
+              "DocumentMoniker": "B:\\repos\\N-Body\\N-Body2\\TreeWrapper.tpp",
+              "RelativeDocumentMoniker": "N-Body2\\TreeWrapper.tpp",
+              "ToolTip": "B:\\repos\\N-Body\\N-Body2\\TreeWrapper.tpp",
+              "RelativeToolTip": "N-Body2\\TreeWrapper.tpp",
+              "ViewState": "AgIAAKQBAAAAAAAAAAAAALIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-10-09T01:53:03.259Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

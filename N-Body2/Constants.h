@@ -2,6 +2,11 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+// OpenGL Colors
+#define WHITE 1.00, 1.00, 1.00
+#define BLACK 0.00, 0.00, 0.00
+#define DGRAY 0.11, 0.12, 0.13
+
 constexpr int DIMENSIONS = 2;
 
 constexpr int PARTITIONS = (DIMENSIONS == 2) ? 4 : (DIMENSIONS == 3) ? 8 : 0;
@@ -16,6 +21,7 @@ constexpr double M_PI =   3.14159265358979323;
 constexpr double SQRT_2 = 1.41421356237309515;
 constexpr double SQRT_3 = 1.73205080756887719;
 constexpr double LOG10_2 = 0.3010299956639812;
+
 
 
 #endif // CONSTANTS_H

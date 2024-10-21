@@ -32,16 +32,16 @@ methods:
 *********************/
 
 /*
-                  +--------------+--------------+
-                 /|     6-tNW   /|    7-tNE    /|
-                / |            / |            / |
+				  +--------------+--------------+
+				 /|     6-tNW   /|    7-tNE    /|
+				/ |            / |            / |
 			   +--------------+--------------+  |
 			  /|  |          /|  |          /|  |
 			 / |  |  4-tSW  / |  |  5-SE   / |  |
 			+--------------+--------------+  |  |
 			|  |  |        |  |  |        |  |  |
-	    	|  |  +-----------|--+-----------|--+
-	   	 	|  | /|        |  | /|        |  | /|
+			|  |  +-----------|--+-----------|--+
+			|  | /|        |  | /|        |  | /|
   z	  		|  |/ |        |  |/ |        |  |/ |
   |	 y		|  +-----------|--+-----------|--+  |
   |	/       | /|  |        | /|  |        | /|  |
@@ -51,18 +51,42 @@ methods:
 			|  |  +--------|--|--+--------|--|--+
 			|  | /   2-bNW |  | /  3-bNE  |  | /
 			|  |/          |  |/          |  |/
-	    	|  +-----------|--+-----------|--+
-	   	 	| /            | /            | /
-	  		|/   0-bSW     |/   1-bSE     |/ 
-	     	+--------------+--------------+
+			|  +-----------|--+-----------|--+
+			| /            | /            | /
+			|/   0-bSW     |/   1-bSE     |/
+			+--------------+--------------+
 
 */
+enum BodyType {
+	Star,
+	Quazar,
+	Planet,
+	Comet,
+	Asteroid,
+	Blackhole,
+	Wormhole
+};
+inline BodyType stringToBodyType(const std::string& typeStr) {
+	if (typeStr == "Star") return BodyType::Star;
+	if (typeStr == "Quazar") return BodyType::Quazar;
+	if (typeStr == "Planet") return BodyType::Planet;
+	if (typeStr == "Comet") return BodyType::Comet;
+	if (typeStr == "Asteroid") return BodyType::Asteroid;
+	if (typeStr == "Blackhole") return BodyType::Blackhole;
+	if (typeStr == "Wormhole") return BodyType::Wormhole;
+
+	throw std::invalid_argument("Unknown BodyType string: " + typeStr);
+}
+
+
 template <typename VecType>
 struct Node {
 private:
 	int m_id;
 
 public:
+
+
 	std::string name;
 	VecType position;
 	VecType velocity;
@@ -70,6 +94,7 @@ public:
 	glm::vec4 color;
 	double mass;
 	double radius;
+	BodyType type;
 
 	bool deleted = false;
 
@@ -80,7 +105,7 @@ public:
 	Node();
 
 	// Creates new node with given properties
-	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius, glm::vec4 color);
+	Node(int id, std::string name, VecType position, VecType velocity, double const mass, double const radius, BodyType type, glm::vec4 color);
 
 	// Gets node ID
 	int getId() const;

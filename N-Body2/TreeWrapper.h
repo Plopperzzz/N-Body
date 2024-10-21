@@ -3,12 +3,17 @@
 #pragma once
 #include "Tree.h"
 #include "Utils.h"
+#include "RenderGroup.h"
+
+#include <unordered_map>
 
 template <typename VecType>
 class TreeWrapper
 {
 public:
 	std::vector<Node<VecType>> nodeList;
+	std::unordered_map<BodyType, std::vector<Node<VecType>>> bodiesByType;
+
 
 private:
 	std::shared_ptr<Tree<VecType>> m_tree;
@@ -38,6 +43,8 @@ public:
 
 	void loadBodies(const std::string& filePath);
 	void extractPositions(std::vector<float>& positions);
+	void extractPositions(std::unordered_map<BodyType, std::vector<float>>& positions);
+	void extractPositions(std::unordered_map<BodyType, RenderGroup>& positions);
 
 private:
 };

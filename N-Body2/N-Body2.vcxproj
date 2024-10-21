@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="BoxBase.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="GFX.h" />
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="OpenGL\Camera.h" />
@@ -146,6 +147,7 @@
     <ClInclude Include="OpenGL\Texture.h" />
     <ClInclude Include="OpenGL\VAO.h" />
     <ClInclude Include="OpenGL\VBO.h" />
+    <ClInclude Include="RenderGroup.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="TreeWrapper.h" />
@@ -153,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxBase.cpp" />
+    <ClCompile Include="GFX.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.tpp" />
@@ -164,6 +167,7 @@
     <ClCompile Include="OpenGL\Texture.cpp" />
     <ClCompile Include="OpenGL\VAO.cpp" />
     <ClCompile Include="OpenGL\VBO.cpp" />
+    <ClCompile Include="RenderGroup.cpp" />
     <ClCompile Include="Tree.tpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="TreeWrapper.tpp" />
@@ -178,8 +182,13 @@
     <None Include="Data\random_bodies.json" />
     <None Include="Data\test_bodies-1.json" />
     <None Include="Data\Two_Earths.json" />
+    <None Include="OpenGL\BlackHole.frag" />
+    <None Include="OpenGL\Comet.frag" />
     <None Include="OpenGL\default.frag" />
     <None Include="OpenGL\default.vert" />
+    <None Include="OpenGL\Planet.frag" />
+    <None Include="OpenGL\star.frag" />
+    <None Include="OpenGL\WormHole.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OpenGL\pop_cat.png" />

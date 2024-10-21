@@ -90,6 +90,12 @@
     <ClInclude Include="OpenGL\Camera.h">
       <Filter>OpenGL\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenderGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tree.tpp">
@@ -140,6 +146,12 @@
     <ClCompile Include="OpenGL\EBO.cpp">
       <Filter>OpenGL\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Earth_Moon_Sun.json">
@@ -170,6 +182,21 @@
       <Filter>OpenGL\Resources\Shaders</Filter>
     </None>
     <None Include="OpenGL\default.vert">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\BlackHole.frag">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\Comet.frag">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\Planet.frag">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\star.frag">
+      <Filter>OpenGL\Resources\Shaders</Filter>
+    </None>
+    <None Include="OpenGL\WormHole.frag">
       <Filter>OpenGL\Resources\Shaders</Filter>
     </None>
   </ItemGroup>
