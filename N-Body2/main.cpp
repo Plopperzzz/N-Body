@@ -148,33 +148,24 @@ int main(int argc, char** argv)
 	}
 
 
+	std::unordered_map<BodyType, Shader> bodyTypeShaderMap = {
+		{ BodyType::Planet, planet_shader },
+		{ BodyType::Star, star_shader },
+		{ BodyType::Blackhole, blackhole_shader },
+		{ BodyType::Wormhole, wormhole_shader }, // Assuming Wormhole is a valid BodyType
+		{ BodyType::Default, default_shader } // Assuming you have a default case
+	};
+
 	// Extract positions from the TreeWrapper
-	//std::vector<float> positions;
 	std::unordered_map<BodyType, RenderGroup> positions;
-	//extractPositions(TestTree2d, positions);
 	TestTree2d.extractPositions(positions);
 	GLsizei stride = (2 + 4 + 1) * sizeof(float); // x, y, r, g, b, a, Radius
 
 	for (auto& [type, renderGroup] : positions)
 	{
-		switch (type)
-		{
-		case BodyType::Planet:
-			renderGroup.Init(planet_shader, stride);
-			break;
-		case BodyType::Star:
-			renderGroup.Init(star_shader, stride);
-			break;
-		case BodyType::Blackhole:
-			renderGroup.Init(blackhole_shader, stride);
-			break;
-		case BodyType::Wormhole:
-			renderGroup.Init(wormhole_shader, stride);
-			break;
-		default:
-			renderGroup.Init(default_shader, stride);
-			break;
-		}
+		// Use the body type to retrieve the correct shader
+		Shader& shader = bodyTypeShaderMap.count(type) ? bodyTypeShaderMap[type] : default_shader;
+		renderGroup.Init(shader, stride);
 	}
 
 	// After updating rootLength

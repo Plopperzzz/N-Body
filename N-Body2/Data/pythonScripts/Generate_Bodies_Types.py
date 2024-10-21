@@ -5,17 +5,23 @@ import math
 import sys
 
 G = 6.67430e-11  # Gravitational constant
-BODY_TYPES = ["Star", "Quazar", "Planet", "Comet", "Asteroid", "Blackhole", "Wormhole"]
+BODY_TYPES = [(0.5,"Star"), (0.02,"Quazar"), (0.02,"Planet"), (0.2,"Comet"), (0.24,"Asteroid"), (0.01,"Blackhole"), (0.01,"Wormhole")]
 
 def generate_random_bodies(num_bodies, mass_range, radius_range, position_range, velocity_range, start_id=0):
     bodies = []
     
+    # Extract probabilities and types
+    probabilities = [prob for prob, _ in BODY_TYPES]
+    types = [t for _, t in BODY_TYPES]
+    
     for i in range(num_bodies):
-        body_type = random.choice(BODY_TYPES)
+        # Select a body type based on weights
+        body_type = random.choices(types, weights=probabilities, k=1)[0]
+        
         body = {
             "id": i + start_id,
             "name": f"Body_{i + start_id}",
-            "type": body_type,
+            "type": body_type,  # Assign directly without indexing
             "mass": random.uniform(*mass_range),
             "radius": random.uniform(*radius_range),
             "position": [
@@ -30,15 +36,16 @@ def generate_random_bodies(num_bodies, mass_range, radius_range, position_range,
             ],
             "force": [0.0, 0.0, 0.0],  # Assuming force starts at zero
             "color": [
-                random.uniform(0, 1),  # Red
-                random.uniform(0, 1),  # Green
-                random.uniform(0, 1),  # Blue
-                random.uniform(0.5, 1) # Alpha (using 0.5 - 1 for better visibility)
+                random.uniform(0, 1),    # Red
+                random.uniform(0, 1),    # Green
+                random.uniform(0, 1),    # Blue
+                random.uniform(0.5, 1)   # Alpha (using 0.5 - 1 for better visibility)
             ]
         }
         bodies.append(body)
     
     return bodies
+
 
 def generate_elliptical_bodies(galaxy_config, start_id=0):
     num_bodies = galaxy_config["num_bodies"]
@@ -122,7 +129,9 @@ def generate_elliptical_bodies(galaxy_config, start_id=0):
         vz += central_body["velocity"][2]
 
         # Assign a random type to the body
-        body_type = random.choice(BODY_TYPES)
+        probabilities = [prob for prob, _ in BODY_TYPES]
+        types = [t for _, t in BODY_TYPES]
+        body_type = random.choices(types, weights=probabilities, k=1)[0]
 
         # Create the body object with mass, position, velocity, and color
         body = {

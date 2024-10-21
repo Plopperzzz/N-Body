@@ -64,7 +64,8 @@ enum BodyType {
 	Comet,
 	Asteroid,
 	Blackhole,
-	Wormhole
+	Wormhole,
+	Default
 };
 inline BodyType stringToBodyType(const std::string& typeStr) {
 	if (typeStr == "Star") return BodyType::Star;

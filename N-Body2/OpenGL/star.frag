@@ -19,6 +19,6 @@ void main()
         discard;
     } 
 
-    FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha), 1.0 - alpha);
+    FragColor = vec4(color.rgb*sin(alpha)/(alpha * alpha), 1-sin(alpha) * sin(alpha));
     //FragColor = vec4(0.0);
 };
