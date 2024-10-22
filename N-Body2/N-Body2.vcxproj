@@ -184,6 +184,8 @@
     <None Include="Data\test_bodies-1.json" />
     <None Include="Data\Two_Earths.json" />
     <None Include="OpenGL\BlackHole.frag" />
+    <None Include="OpenGL\boxShader.frag" />
+    <None Include="OpenGL\boxShader.vert" />
     <None Include="OpenGL\Comet.frag" />
     <None Include="OpenGL\default.frag" />
     <None Include="OpenGL\default.vert" />

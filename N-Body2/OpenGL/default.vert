@@ -13,7 +13,7 @@ void main()
 {
 	gl_Position = camMatrix * vec4(aPos, 0.0, 1.0);
 	
-	gl_PointSize = 30 * zoom * aRad / radius;
+	gl_PointSize = 70 * zoom * aRad / radius;
 
 	color = aColor;
 };

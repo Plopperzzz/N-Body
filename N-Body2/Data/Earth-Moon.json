@@ -3,20 +3,24 @@
     {
       "id": 1,
       "name": "Earth",
+      "type": "Planet",
       "mass": 6.9722e24,
       "radius": 6371.0e3,
       "position": [-1.0, -1.0, 0.0],
       "velocity": [0.0, 0.0, -100.0],
-      "force": [0.0, 0.0, 0.0]
+      "force": [ 0.0, 0.0, 0.0 ],
+      "color": [ 0.0, 0.0, 1.0, 1.0 ]
     },
     {
-      "id": 2,
-      "name": "Moon",
-      "mass": 7.346e22,
-      "radius": 1737.4e3,
-      "position": [0.3633e9, 500.0, 0.0],
-      "velocity": [0.0, 1.082e3, 0.0],
-      "force": [0.0, 0.0, 0.0]
+      "id": 1,
+      "name": "Earth",
+      "type": "Planet",
+      "mass": 6.9722e24,
+      "radius": 6371.0e3,
+      "position": [ 50.0, 50.0, 0.0 ],
+      "velocity": [ 0.0, 0.0, -100.0 ],
+      "force": [ 0.0, 0.0, 0.0 ],
+      "color": [ 0.0, 0.0, 1.0, 1.0 ]
     }
   ]
 }

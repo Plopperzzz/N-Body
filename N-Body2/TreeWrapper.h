@@ -6,6 +6,7 @@
 #include "RenderGroup.h"
 
 #include <unordered_map>
+#include <vector>
 
 template <typename VecType>
 class TreeWrapper
@@ -43,8 +44,9 @@ public:
 
 	void loadBodies(const std::string& filePath);
 	void extractPositions(std::vector<float>& positions);
-	void extractPositions(std::unordered_map<BodyType, std::vector<float>>& positions);
 	void extractPositions(std::unordered_map<BodyType, RenderGroup>& positions);
+
+	void getBoundingBoxVertices(RenderGroup& group);
 
 private:
 };

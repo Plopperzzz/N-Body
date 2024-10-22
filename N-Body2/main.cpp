@@ -55,6 +55,8 @@ int main(int argc, char** argv)
 		("f,file", "Input point data file (JSON)", cxxopts::value<std::string>()->default_value("../Data/test_bodies-1.json"))
 		("b,brute-force", "N-body simulation algorithm", cxxopts::value<bool>()->default_value("false"))
 		("twoD", "Choice of 2 or 3", cxxopts::value<bool>()->default_value("false"))
+		("debug", "Displays bounding boxes", cxxopts::value<bool>()->default_value("false"))
+
 		;
 
 	system("CLS");
@@ -69,6 +71,7 @@ int main(int argc, char** argv)
 	bool plot = false;
 	bool brute_force = result["brute-force"].as<bool>();
 	bool twoD = result["twoD"].as<bool>();
+	bool debug = result["debug"].as<bool>();
 
 	if (result.count("brute-force") && result.count("theta"))
 	{
@@ -125,6 +128,7 @@ int main(int argc, char** argv)
 	Shader planet_shader((path + "/default.vert").c_str(), (path + "/Planet.frag").c_str());
 	Shader wormhole_shader((path + "/default.vert").c_str(), (path + "/WormHole.frag").c_str());
 	Shader default_shader((path + "/default.vert").c_str(), (path + "/default.frag").c_str());
+	Shader boxShader((path + "/boxShader.vert").c_str(), (path + "/boxShader.frag").c_str());
 
 	/*************************************************************/
 	/************************** SETUP ****************************/
@@ -141,6 +145,8 @@ int main(int argc, char** argv)
 	TestTree2d.loadBodies(input_path);
 	rootLength = TestTree2d.getTree().getLength();
 
+
+	int a = 1;
 	double maxRad = TestTree2d.nodeList[0].radius;
 	for (auto& body : TestTree2d.nodeList)
 	{
@@ -162,6 +168,19 @@ int main(int argc, char** argv)
 	// Extract positions from the TreeWrapper
 	std::unordered_map<BodyType, RenderGroup> positions;
 	TestTree2d.extractPositions(positions);
+	
+
+
+	std::vector<float> boxVertices;
+	std::vector<int> boxIndices;
+
+	RenderGroup boundingBoxes;
+	if (debug)
+	{
+		TestTree2d.getBoundingBoxVertices(boundingBoxes);
+		boundingBoxes.Init(boxShader, 5*sizeof(float));
+	}
+
 	GLsizei stride = (2 + 4 + 1) * sizeof(float); // x, y, r, g, b, a, Radius
 
 	for (auto& [type, renderGroup] : positions)
@@ -210,24 +229,27 @@ int main(int argc, char** argv)
 	double lastTime = glfwGetTime();
 	int nbFrames = 0;
 
-	// Get the location of the uniform variable "uProjection" in the shader program
-	//GLint projLoc = glGetUniformLocation(shader.ID, "camMatrix");
-
 	int currentBuffer = 0; // Index to alternate between VBOs
+
 	// Main loop
 	while (!glfwWindowShouldClose(window)) {
 
 		GFXFrameTime(lastTime, nbFrames);
+
 		// Update simulation
 		TestTree2d.update(dt);
-
 		TestTree2d.extractPositions(positions);
-			glClearColor(BLACK, 1.0f); // Dark gray background
-			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Dark gray background
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		TestTree2d.getBoundingBoxVertices(boundingBoxes);
+
+		glClearColor(DGRAY, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (auto& [type, renderGroup] : positions)
 		{
+			if (debug)
+			{
+				boundingBoxes.Render(camera, 0, 5, NULL);
+			}
 			renderGroup.Render(camera, maxRad, 7, NULL);
 		}
 

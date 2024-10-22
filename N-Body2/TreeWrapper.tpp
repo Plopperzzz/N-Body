@@ -68,7 +68,7 @@ void TreeWrapper<VecType>::deleteBody(int id, std::shared_ptr<Tree<VecType>> tre
 			{
 				if (childTree && childTree->m_totalDescendants > 0)
 				{
-					deleteBody(id, childTree);
+					deleteBody(id, childTree);;
 				}
 			}
 	}
@@ -486,6 +486,53 @@ void TreeWrapper<VecType>::extractPositions(std::unordered_map<BodyType, RenderG
 	}
 }
 
+
+template<typename VecType>
+void TreeWrapper<VecType>::getBoundingBoxVertices(RenderGroup& group)
+{
+	std::queue<std::shared_ptr<Tree<VecType>>> bfsQueue;
+	std::shared_ptr<Tree<VecType>> currentTree;
+	bfsQueue.push(std::make_shared<Tree<VecType>>(getTree()));
+	int counter = 0;
+
+	group.indices.clear();
+	group.data.clear();
+
+	while (!bfsQueue.empty())
+	{
+		currentTree = bfsQueue.front();
+		bfsQueue.pop();
+
+		if (currentTree == nullptr)
+			continue;
+
+		currentTree->m_boundingBox.getCorners(group.data);
+
+		// bottom left to bottom right
+		group.indices.push_back(counter);
+		group.indices.push_back(counter + 1);
+
+		// bottom right to top right
+		group.indices.push_back(counter + 1);
+		group.indices.push_back(counter + 2);
+
+		// top right to top left
+		group.indices.push_back(counter + 2);
+		group.indices.push_back(counter + 3);
+
+		// top left to bottom left
+		group.indices.push_back(counter + 3);
+		group.indices.push_back(counter);
+		if (!currentTree->isLeaf())
+		{
+			for (auto& child : currentTree->m_children)
+			{
+				bfsQueue.push(child);
+			}
+		}
+		counter += 4;
+	}
+}
 #endif
 
 

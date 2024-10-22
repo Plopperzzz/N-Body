@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 #include <type_traits>
 #include <sstream>
+#include <vector>
 
 	/*
 				   +--------------+ topRight
@@ -40,7 +41,7 @@ public:
     // Single constructor with conditional logic using if constexpr (C++17)
     Box():
         center(VecType()),
-        color(0),
+        color(1.0),
         m_halfLength(),
         m_halfWidth(),
         m_halfHeight()
@@ -53,7 +54,7 @@ public:
     // Single constructor with conditional logic using if constexpr (C++17)
     Box(const VecType& center_, double halfLength, double halfWidth, double halfHeight = 0.0):
         center(center_),
-        color(0),
+        color(1.0),
         m_halfLength(halfLength),
         m_halfWidth(halfWidth),
         m_halfHeight(halfHeight)
@@ -129,6 +130,28 @@ public:
         return contains_impl(point, std::is_same<VecType, glm::dvec3>());
     }
 
+    void getCorners(std::vector<float>& cornerVector)
+    {
+        return getCorners_impl(cornerVector, std::is_same <VecType, glm::dvec3>());
+    }
+
+    void incrementColor() {
+        float inc = 0.25;
+        color.r -= inc; // Increment red component
+        if (color.r < 0.0f) {
+            color.r = 1.0f;
+            color.g -= inc; // Increment green component when red wraps around
+            if (color.g < 0.0f) {
+                color.g = 1.0f;
+                color.b -= inc; // Increment blue component when green wraps around
+                if (color.b < 0.0f) {
+                    color.b = 1.0f; // Reset blue if it overflows
+                }
+            }
+        }
+    }
+
+
 private:
     // Implementation for 2D
     bool contains_impl(const glm::dvec2& point, std::false_type) const {
@@ -146,6 +169,107 @@ private:
             point.y <= center.y + m_halfLength &&
             point.z >= center.z - m_halfHeight &&
             point.z <= center.z + m_halfHeight);
+    }
+
+    // Implementation for 2D
+    void getCorners_impl(std::vector<float>& cornerVector, std::false_type)
+    {
+        glm::dvec2 point = center;
+        double halfLen = m_halfLength;
+
+        // Bottom-left corner
+        cornerVector.push_back(center.x - halfLen);  // x coordinate
+        cornerVector.push_back(center.y - halfLen);  // y coordinate
+        cornerVector.push_back(color.r);
+        cornerVector.push_back(color.g);
+        cornerVector.push_back(color.b);
+
+        // Bottom-right corner
+        cornerVector.push_back(center.x + halfLen);  // x coordinate
+        cornerVector.push_back(center.y - halfLen);  // y coordinate
+        cornerVector.push_back(color.r);
+        cornerVector.push_back(color.g);
+        cornerVector.push_back(color.b);
+
+        // Top-right corner
+        cornerVector.push_back(center.x + halfLen);  // x coordinate
+        cornerVector.push_back(center.y + halfLen);  // y coordinate
+        cornerVector.push_back(color.r);
+        cornerVector.push_back(color.g);
+        cornerVector.push_back(color.b);
+
+        // Top-left corner
+        cornerVector.push_back(center.x - halfLen);  // x coordinate
+        cornerVector.push_back(center.y + halfLen);  // y coordinate
+        cornerVector.push_back(color.r);
+        cornerVector.push_back(color.g);
+        cornerVector.push_back(color.b);
+
+    }
+    
+    // Implementation for 3D
+    void getCorners_impl(std::vector<float>& cornerVector, std::true_type)
+    {
+        glm::dvec3 point = center;  // Center of the cube
+        double halfLen = m_halfLength;  // Half the side length (distance from center to edge)
+
+        // Bottom face (starting from bottom-front-left)
+
+        //    // Loop over all combinations of -halfLen and +halfLen for x, y, and z
+        //for (int i = 0; i < 8; ++i)
+        //{
+        //    // Calculate the sign for each dimension based on the loop index (i)
+        //    float xOffset = (i & 1) ? halfLen : -halfLen;
+        //    float yOffset = (i & 2) ? halfLen : -halfLen;
+        //    float zOffset = (i & 4) ? halfLen : -halfLen;
+
+        //    // Push the corner into the vector
+        //    cornerVector.push_back(center.x + xOffset);
+        //    cornerVector.push_back(center.y + yOffset);
+        //    cornerVector.push_back(center.z + zOffset);
+        //}
+
+        // Bottom-front-left
+        cornerVector.push_back(center.x - halfLen);
+        cornerVector.push_back(center.y - halfLen);
+        cornerVector.push_back(center.z - halfLen);
+
+        // Bottom-front-right
+        cornerVector.push_back(center.x + halfLen);
+        cornerVector.push_back(center.y - halfLen);
+        cornerVector.push_back(center.z - halfLen);
+
+        // Bottom-back-right
+        cornerVector.push_back(center.x + halfLen);
+        cornerVector.push_back(center.y - halfLen);
+        cornerVector.push_back(center.z + halfLen);
+
+        // Bottom-back-left
+        cornerVector.push_back(center.x - halfLen);
+        cornerVector.push_back(center.y - halfLen);
+        cornerVector.push_back(center.z + halfLen);
+
+        // Top face (starting from top-front-left)
+
+        // Top-front-left
+        cornerVector.push_back(center.x - halfLen);
+        cornerVector.push_back(center.y + halfLen);
+        cornerVector.push_back(center.z - halfLen);
+
+        // Top-front-right
+        cornerVector.push_back(center.x + halfLen);
+        cornerVector.push_back(center.y + halfLen);
+        cornerVector.push_back(center.z - halfLen);
+
+        // Top-back-right
+        cornerVector.push_back(center.x + halfLen);
+        cornerVector.push_back(center.y + halfLen);
+        cornerVector.push_back(center.z + halfLen);
+
+        // Top-back-left
+        cornerVector.push_back(center.x - halfLen);
+        cornerVector.push_back(center.y + halfLen);
+        cornerVector.push_back(center.z + halfLen);
     }
 };
 

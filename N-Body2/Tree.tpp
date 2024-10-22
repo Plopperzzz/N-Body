@@ -154,6 +154,7 @@ void Tree<VecType>::subdivide()
 				halfLength,
 				halfLength,
 				halfLength));
+		child->m_boundingBox.incrementColor();
 		++i;
 	}
 }
@@ -164,6 +165,7 @@ void Tree<VecType>::updateCenterOfMass(Node<VecType>& body) {
 	m_centerOfMass = (m_centerOfMass * m_totalMass + mass * body.position) / (m_totalMass + mass);
 	m_totalMass += mass;
 }
+
 
 template <typename VecType>
 bool Tree<VecType>::inBounds(VecType& position) {
