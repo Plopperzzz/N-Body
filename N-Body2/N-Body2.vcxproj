@@ -148,6 +148,7 @@
     <ClInclude Include="OpenGL\VAO.h" />
     <ClInclude Include="OpenGL\VBO.h" />
     <ClInclude Include="RenderGroup.h" />
+    <ClInclude Include="stb_truetype.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="TreeWrapper.h" />

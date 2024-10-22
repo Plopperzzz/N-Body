@@ -27,6 +27,9 @@ std::string path = "../../N-Body2/OpenGL";
 unsigned int width = 1200;
 unsigned int height = 1200;
 
+#include <stb/stb_truetype.h>
+#include <fstream>
+#include <vector>
 
 // TODO:
 //		- Memorypool class

@@ -14,15 +14,15 @@
     "central_color": [ 1.0, 0.0, 0.0, 1.0 ]
   },
   {
-    "num_bodies": 4000,
+    "num_bodies": 7000,
     "mass_range": [ 1e20, 1e25 ],
     "radius_range": [ 1e3, 1e5 ],
     "min_radius": 1e9,
     "max_radius": 5e9,
-    "circle_center": [ 5e9, 1e10, 0.0 ],
+    "circle_center": [ 5e9, 2e10, 0.0 ],
     "circle_plane": "xy",
-    "central_mass": 1e37,
-    "eccentricity_range": [ 0.1, 0.3 ],
+    "central_mass": 1e38,
+    "eccentricity_range": [ 0.0, 1.0 ],
     "central_velocity": [ 3.0e8, -1e8, 0.0 ],
     "central_radius": 2e5,
     "central_color": [ 0.0, 0.0, 1.0, 1.0 ]
