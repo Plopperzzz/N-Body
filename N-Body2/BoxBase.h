@@ -136,7 +136,7 @@ public:
     }
 
     void incrementColor() {
-        float inc = 0.25;
+        float inc = 0.5;
         color.r -= inc; // Increment red component
         if (color.r < 0.0f) {
             color.r = 1.0f;

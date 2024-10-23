@@ -23,7 +23,7 @@
     "circle_plane": "xy",
     "central_mass": 1e37,
     "eccentricity_range": [ 0.1, 0.3 ],
-    "central_velocity": [ 6.8e8, -1.5e8, 0.0 ],
+    "central_velocity": [ 0.8e8, -1.5e8, 0.0 ],
     "central_radius": 2e5,
     "central_color": [ 0.0, 0.0, 1.0, 1.0 ]
   }

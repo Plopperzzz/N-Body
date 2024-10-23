@@ -2,7 +2,7 @@
 #define TREE_TPP
 #include "Tree.h"
 #include <iostream>
-
+inline int maxCount = 65;
 template <typename VecType>
 const glm::dvec3 Tree<VecType>::basis[8] = {
 	glm::dvec3(-1, -1, -1), // Index 0: bSOUTHWEST
@@ -27,7 +27,7 @@ Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body) ://, std::wea
 	m_boundingBox(boundingBox),
 	m_totalDescendants(0),
 	m_totalMass(0),
-	m_maxBodyCount(5),
+	m_maxBodyCount(maxCount),
 	m_currentBodyCount(1)
 {
 	m_body.push_back(body);
@@ -39,7 +39,7 @@ Tree<VecType>::Tree(Box<VecType> boundingBox) ://, std::weak_ptr<OctTree> parent
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(VecType(0)),
-	m_maxBodyCount(5),
+	m_maxBodyCount(maxCount),
 	m_currentBodyCount(0)
 {
 }
@@ -50,7 +50,7 @@ Tree<VecType>::Tree(Box<VecType> boundingBox, double& theta, double& epsilon) :
 	m_centerOfMass(VecType(0)),
 	m_totalMass(0),
 	m_totalDescendants(0),
-	m_maxBodyCount(5),
+	m_maxBodyCount(maxCount),
 	m_currentBodyCount(0)
 {
 }
@@ -154,6 +154,7 @@ void Tree<VecType>::subdivide()
 				halfLength,
 				halfLength,
 				halfLength));
+		child->m_boundingBox.color = m_boundingBox.color;
 		child->m_boundingBox.incrementColor();
 		++i;
 	}
