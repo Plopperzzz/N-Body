@@ -2,7 +2,7 @@
 #define TREE_TPP
 #include "Tree.h"
 #include <iostream>
-inline int maxCount = 65;
+inline int maxCount = 8;
 template <typename VecType>
 const glm::dvec3 Tree<VecType>::basis[8] = {
 	glm::dvec3(-1, -1, -1), // Index 0: bSOUTHWEST
@@ -21,36 +21,36 @@ template <typename VecType>
 double Tree<VecType>::m_epsilon = 1e-3;
 
 template <typename VecType>
-Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body) ://, std::weak_ptr<OctTree> parent) :
+Tree<VecType>::Tree(Box<VecType> boundingBox, Node<VecType>& body, int maxBodyCount) ://, std::weak_ptr<OctTree> parent) :
 	m_centerOfMass(VecType(0)),
 	m_body(),
 	m_boundingBox(boundingBox),
 	m_totalDescendants(0),
 	m_totalMass(0),
-	m_maxBodyCount(maxCount),
+	m_maxBodyCount(maxBodyCount),
 	m_currentBodyCount(1)
 {
 	m_body.push_back(body);
 }
 
 template <typename VecType>
-Tree<VecType>::Tree(Box<VecType> boundingBox) ://, std::weak_ptr<OctTree> parent) :
+Tree<VecType>::Tree(Box<VecType> boundingBox, int maxBodyCount) ://, std::weak_ptr<OctTree> parent) :
 	m_totalDescendants(0),
 	m_totalMass(0),
 	m_boundingBox(boundingBox),
 	m_centerOfMass(VecType(0)),
-	m_maxBodyCount(maxCount),
+	m_maxBodyCount(maxBodyCount),
 	m_currentBodyCount(0)
 {
 }
 
 template <typename VecType>
-Tree<VecType>::Tree(Box<VecType> boundingBox, double& theta, double& epsilon) :
+Tree<VecType>::Tree(Box<VecType> boundingBox, double& theta, double& epsilon, int maxBodyCount) :
 	m_boundingBox(boundingBox),
 	m_centerOfMass(VecType(0)),
 	m_totalMass(0),
 	m_totalDescendants(0),
-	m_maxBodyCount(maxCount),
+	m_maxBodyCount(maxBodyCount),
 	m_currentBodyCount(0)
 {
 }
@@ -153,7 +153,8 @@ void Tree<VecType>::subdivide()
 				thisCenter + halfLength * (VecType(basis[i])),
 				halfLength,
 				halfLength,
-				halfLength));
+				halfLength),
+			m_maxBodyCount);
 		child->m_boundingBox.color = m_boundingBox.color;
 		child->m_boundingBox.incrementColor();
 		++i;

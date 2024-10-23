@@ -80,6 +80,12 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 		if (key == GLFW_KEY_D) {
 			Position += speed * glm::normalize(glm::cross(Orientation, Up)); // Move right
 		}
+		if (key == GLFW_KEY_SPACE)
+		{
+			Camera* cam = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+			cam->debug = !cam->debug;
+			return;
+		}
 
 		// Update orthographic projection after panning
 		SetOrthographic(orthoLeft + Position.x, orthoRight + Position.x,

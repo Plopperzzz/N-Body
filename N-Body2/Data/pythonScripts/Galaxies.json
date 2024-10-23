@@ -1,6 +1,6 @@
 [
   {
-    "num_bodies": 3000,
+    "num_bodies": 5000,
     "mass_range": [ 1e20, 1e30 ],
     "radius_range": [ 1e3, 1e5 ],
     "min_radius": 1e9,
@@ -14,7 +14,7 @@
     "central_color": [ 1.0, 0.0, 0.0, 1.0 ]
   },
   {
-    "num_bodies": 2000,
+    "num_bodies": 5000,
     "mass_range": [ 1e20, 1e25 ],
     "radius_range": [ 1e3, 1e5 ],
     "min_radius": 1e9,

@@ -107,7 +107,7 @@ private:
 
 	// Total number of Nodes contained in all the leaves
 	int m_totalDescendants;
-	int m_maxBodyCount;
+	int m_maxBodyCount = 5;
 	int m_currentBodyCount;
 
 	bool m_forceComputed = false;
@@ -128,9 +128,9 @@ public:
 
 	// Methods
 public:
-	Tree<VecType>(Box<VecType> boundingBox);
-	Tree<VecType>(Box<VecType> boundingBox, Node<VecType>& body);
-	Tree<VecType>(Box<VecType> boundingBox, double& theta, double& epsilon);
+	Tree<VecType>(Box<VecType> boundingBox, int maxBodyCount);
+	Tree<VecType>(Box<VecType> boundingBox, Node<VecType>& body, int maxBodyCount);
+	Tree<VecType>(Box<VecType> boundingBox, double& theta, double& epsilon, int maxBodyCount);
 
 	// Returns QuadTree child at childIndex
 	std::shared_ptr<Tree<VecType>>& operator[](std::size_t childIndex);

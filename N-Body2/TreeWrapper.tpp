@@ -268,7 +268,7 @@ void TreeWrapper<VecType>::update(const double& dt)
 
 	// Now handle the tree insertion after parallel work is done
 	Box<VecType> newBoundingBox = Box<VecType>(m_tree->m_boundingBox.center, max, max, max);
-	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox);
+	std::shared_ptr<Tree<VecType>> newTree = std::make_shared<Tree<VecType>>(newBoundingBox, m_tree->m_maxBodyCount);
 
 	// Insert bodies sequentially into the new tree
 	for (Node<VecType>& body : nodeList) {
@@ -388,7 +388,7 @@ void TreeWrapper<VecType>::loadBodies(const std::string& file_path) {
 
 	Box<VecType> new_bounding_box(m_tree->m_boundingBox.center, 2 * max, 2 * max, 2 * max);
 
-	std::shared_ptr<Tree<VecType>> new_tree = std::make_shared<Tree<VecType>>(new_bounding_box);
+	std::shared_ptr<Tree<VecType>> new_tree = std::make_shared<Tree<VecType>>(new_bounding_box,m_tree->m_maxBodyCount);
 	m_tree = new_tree;
 
 	// Loop through each body in the JSON data

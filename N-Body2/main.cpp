@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 		("f,file", "Input point data file (JSON)", cxxopts::value<std::string>()->default_value("../Data/test_bodies-1.json"))
 		("b,brute-force", "N-body simulation algorithm", cxxopts::value<bool>()->default_value("false"))
 		("twoD", "Choice of 2 or 3", cxxopts::value<bool>()->default_value("false"))
-		("debug", "Displays bounding boxes", cxxopts::value<bool>()->default_value("false"))
+		("m,max_body_count", "Maximum allowed bodies occupying a region before subdividin.", cxxopts::value<int>()->default_value("8"))
 
 		;
 
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 	bool plot = false;
 	bool brute_force = result["brute-force"].as<bool>();
 	bool twoD = result["twoD"].as<bool>();
-	bool debug = result["debug"].as<bool>();
+	int maxBodyCount = result["max_body_count"].as<int>();
 
 	if (result.count("brute-force") && result.count("theta"))
 	{
@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 	double rootLength = 1e5;
 
 	Box2D bb(glm::dvec2(0.0), rootLength / 2, rootLength / 2, rootLength / 2);
-	std::shared_ptr<Tree2D> root2d = std::make_shared<Tree2D>(bb, theta, epsilon);
+	std::shared_ptr<Tree2D> root2d = std::make_shared<Tree2D>(bb, theta, epsilon, maxBodyCount);
 	root2d->setTheta(theta);
 	TreeWrapper2D TestTree2d(root2d);
 
@@ -152,7 +152,7 @@ int main(int argc, char** argv)
 	{
 		if (body.radius > maxRad)
 		{
-			maxRad = body.radius;
+			maxRad = body.radius;;
 		}
 	}
 
@@ -175,11 +175,8 @@ int main(int argc, char** argv)
 	std::vector<int> boxIndices;
 
 	RenderGroup boundingBoxes;
-	if (debug)
-	{
-		TestTree2d.getBoundingBoxVertices(boundingBoxes);
-		boundingBoxes.Init(boxShader, 5*sizeof(float));
-	}
+	TestTree2d.getBoundingBoxVertices(boundingBoxes);
+	boundingBoxes.Init(boxShader, 5*sizeof(float));
 
 	GLsizei stride = (2 + 4 + 1) * sizeof(float); // x, y, r, g, b, a, Radius
 
@@ -246,7 +243,7 @@ int main(int argc, char** argv)
 
 		for (auto& [type, renderGroup] : positions)
 		{
-			if (debug)
+			if (camera.debug)
 			{
 				boundingBoxes.Render(camera, 0, 5, NULL);
 			}
