@@ -24,8 +24,8 @@ std::string path = "../../N-Body2/OpenGL";
 #endif
 
 
-unsigned int width = 1200;
-unsigned int height = 1200;
+unsigned int width = 1920;
+unsigned int height = 1080;
 
 #include <stb/stb_truetype.h>
 #include <fstream>
@@ -190,16 +190,19 @@ int main(int argc, char** argv)
 	// After updating rootLength
 	rootLength = TestTree2d.getTree().getLength();
 
-	//	// Set up projection matrix for orthographic projection
-	float left = -rootLength / 2;
-	float right = rootLength / 2;
-	float bottom = -rootLength / 2;
-	float top = rootLength / 2;
-	float nearPlane = -1.0;
-	float farPlane = 1.0;
+	// Set up projection matrix for orthographic projection
+	float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+	float orthoWidth = rootLength * aspectRatio;
+	glm::vec3 position(0.0f ,0.0f , 0.0f);
+	float left = (position.x - orthoWidth) / 2;
+	float right = (position.x + orthoWidth) / 2;
+	float bottom = (position.y - rootLength) / 2;
+	float top = (position.y + rootLength) / 2;
+	float nearPlane = 0;
+	float farPlane = 1;
 
 	// Set up camera and input callbacks
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 0.0f));
+	Camera camera(width, height, position);
 	camera.SetOrthographic(left, right, bottom, top, nearPlane, farPlane);
 	glfwSetWindowUserPointer(window, &camera); // Set user pointer to the camera instance
 
@@ -245,6 +248,7 @@ int main(int argc, char** argv)
 		{
 			if (camera.debug)
 			{
+				//std::cout << "rendering bounding boxes" << std::endl;
 				boundingBoxes.Render(camera, 0, 5, NULL);
 			}
 			renderGroup.Render(camera, maxRad, 7, NULL);

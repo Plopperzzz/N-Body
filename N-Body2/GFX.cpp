@@ -32,7 +32,7 @@ void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsi
 	GLCall(glEnable(GL_PROGRAM_POINT_SIZE));
 
 	// Viewport
-	glViewport(0, 0, 1920, 1920);
+	glViewport(0, 0, width, height);
 	glfwSwapInterval(0);
 
 	return window;

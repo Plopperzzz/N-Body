@@ -68,17 +68,25 @@ void Camera::Matrix(Shader& shader, const char* uniform)
 void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 
 	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-		if (key == GLFW_KEY_W) {
-			Position += speed * Up; // Move up
-		}
-		if (key == GLFW_KEY_S) {
-			Position -= speed * Up; // Move down
-		}
-		if (key == GLFW_KEY_A) {
-			Position -= speed * glm::normalize(glm::cross(Orientation, Up)); // Move left
-		}
-		if (key == GLFW_KEY_D) {
-			Position += speed * glm::normalize(glm::cross(Orientation, Up)); // Move right
+		if (key == GLFW_KEY_W || key == GLFW_KEY_S || key == GLFW_KEY_A || key == GLFW_KEY_D) {
+
+		//	if (key == GLFW_KEY_W) {
+		//		Position += speed * Up; // Move up
+		//	}
+		//	if (key == GLFW_KEY_S) {
+		//		Position -= speed * Up; // Move down
+		//	}
+		//	if (key == GLFW_KEY_A) {
+		//		Position -= speed * glm::normalize(glm::cross(Orientation, Up)); // Move left
+		//	}
+		//	if (key == GLFW_KEY_D) {
+		//		Position += speed * glm::normalize(glm::cross(Orientation, Up)); // Move right
+		//	}
+		//// Update orthographic projection after panning
+		//SetOrthographic(orthoLeft + Position.x, orthoRight + Position.x,
+		//	orthoBottom + Position.y, orthoTop + Position.y,
+		//	nearPlane, farPlane);
+	}
 		}
 		if (key == GLFW_KEY_SPACE)
 		{
@@ -87,11 +95,6 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 			return;
 		}
 
-		// Update orthographic projection after panning
-		SetOrthographic(orthoLeft + Position.x, orthoRight + Position.x,
-			orthoBottom + Position.y, orthoTop + Position.y,
-			nearPlane, farPlane);
-	}
 }
 
 
