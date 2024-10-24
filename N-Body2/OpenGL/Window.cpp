@@ -11,6 +11,10 @@ Window::Window(std::string title, unsigned int width, unsigned int height, unsig
 	initGLFW(major, minor);
 	createWindow();
 	setSwapInterval(swapInterval);
+
+	glfwSetWindowUserPointer(window, this);
+	glfwSetKeyCallback(window, KeyCallback);
+	glfwSetMouseButtonCallback(window, MouseButtonCallback);
 }
 
 Window::~Window()
@@ -69,3 +73,4 @@ void Window::createWindow()
 
 	glViewport(0, 0, width, height);
 }
+
