@@ -99,6 +99,9 @@
     <ClInclude Include="stb_truetype.h">
       <Filter>OpenGL\Libraries\include\stb</Filter>
     </ClInclude>
+    <ClInclude Include="OpenGL\Window.h">
+      <Filter>OpenGL\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tree.tpp">
@@ -155,6 +158,9 @@
     <ClCompile Include="GFX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGL\Window.cpp">
+      <Filter>OpenGL\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Earth_Moon_Sun.json">
@@ -202,6 +208,8 @@
     <None Include="OpenGL\WormHole.frag">
       <Filter>OpenGL\Resources\Shaders</Filter>
     </None>
+    <None Include="OpenGL\boxShader.frag" />
+    <None Include="OpenGL\boxShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="OpenGL\pop_cat.png">

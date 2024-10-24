@@ -147,6 +147,7 @@
     <ClInclude Include="OpenGL\Texture.h" />
     <ClInclude Include="OpenGL\VAO.h" />
     <ClInclude Include="OpenGL\VBO.h" />
+    <ClInclude Include="OpenGL\Window.h" />
     <ClInclude Include="RenderGroup.h" />
     <ClInclude Include="stb_truetype.h" />
     <ClInclude Include="Tree.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="OpenGL\Texture.cpp" />
     <ClCompile Include="OpenGL\VAO.cpp" />
     <ClCompile Include="OpenGL\VBO.cpp" />
+    <ClCompile Include="OpenGL\Window.cpp" />
     <ClCompile Include="RenderGroup.cpp" />
     <ClCompile Include="Tree.tpp" />
     <ClCompile Include="Box.cpp" />
