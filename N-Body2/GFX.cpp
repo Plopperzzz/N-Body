@@ -33,7 +33,7 @@ void* GFXInit(unsigned int width, unsigned int height, unsigned char major, unsi
 
 	// Viewport
 	glViewport(0, 0, width, height);
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 
 	return window;
 

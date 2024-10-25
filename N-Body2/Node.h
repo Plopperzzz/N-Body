@@ -6,6 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <atomic>
 
 #include "constants.h"
 #include "BoxBase.h"

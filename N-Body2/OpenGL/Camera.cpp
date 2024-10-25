@@ -100,43 +100,7 @@ void Camera::KeyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 void Camera::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	//// Get cursor position
-	//double xpos, ypos;
-	//glfwGetCursorPos(window, &xpos, &ypos);
-
-	//// Get viewport dimensions
-	//int viewportWidth, viewportHeight;
-	//glfwGetWindowSize(window, &viewportWidth, &viewportHeight);
-
-	//// Convert cursor position to normalized device coordinates (-1 to 1)
-	//double ndcX = (2.0 * xpos) / viewportWidth - 1.0;
-	//double ndcY = 1.0 - (2.0 * ypos) / viewportHeight; // Note: Y is flipped in screen coordinates
-
-	//// Calculate the world coordinates of the cursor position before zooming
-	//double worldX = orthoLeft + (ndcX + 1.0) * (orthoRight - orthoLeft) / 2.0;
-	//double worldY = orthoBottom + (ndcY + 1.0) * (orthoTop - orthoBottom) / 2.0;
-
-	//// Adjust zoom speed
-	//float zoomSpeed = 1.1f;
-
-	//// Zoom in or out
-	//if (yoffset > 0) {
-	//	// Zoom in
-	//	orthoLeft = worldX + (orthoLeft - worldX) / zoomSpeed;
-	//	orthoRight = worldX + (orthoRight - worldX) / zoomSpeed;
-	//	orthoBottom = worldY + (orthoBottom - worldY) / zoomSpeed;
-	//	orthoTop = worldY + (orthoTop - worldY) / zoomSpeed;
-	//	zoomLevel += 0.1 * zoomSpeed;
-	//}
-	//else if (yoffset < 0) {
-	//	// Zoom out
-	//	orthoLeft = worldX + (orthoLeft - worldX) * zoomSpeed;
-	//	orthoRight = worldX + (orthoRight - worldX) * zoomSpeed;
-	//	orthoBottom = worldY + (orthoBottom - worldY) * zoomSpeed;
-	//	orthoTop = worldY + (orthoTop - worldY) * zoomSpeed;
-	//	zoomLevel -= 0.1 / zoomSpeed;
-	//}
-		// Get cursor position
+	// Get cursor position
 	double xpos, ypos;
 	glfwGetCursorPos(window, &xpos, &ypos);
 

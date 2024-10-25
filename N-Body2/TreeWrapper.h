@@ -19,6 +19,7 @@ public:
 private:
 	std::shared_ptr<Tree<VecType>> m_tree;
 	int m_totalBodies;
+	double m_boundaryRadius;
 
 
 public:

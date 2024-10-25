@@ -2,8 +2,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+//#include <glad/glad.h>
+//#include <GLFW/glfw3.h>
+#include <Camera.h>
 #include <string>
 #include <unordered_map>
 #include <stdexcept>

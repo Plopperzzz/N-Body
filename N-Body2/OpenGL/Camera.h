@@ -24,6 +24,7 @@ public:
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
+	bool firstScroll = true;
 	bool middleMousePressed = false;
 	bool debug = false;
 
@@ -35,6 +36,7 @@ public:
 	float speed;
 	float sensitivity;
 	float zoomLevel;
+	float lastScrollTime;
 
 	// Projection Parameters
 	bool isOrthographic;
